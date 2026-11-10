@@ -13,15 +13,16 @@ function match(p){const q=S.q.trim().toLowerCase().replace("#","");if(!q)return 
 function pills(){const items=["2 Colors","3 Colors","4 Colors","5 Colors","Pastel","Shuffle Fonts"];$("filters").innerHTML=items.map((t,i)=>{const on=i<4?S.count==i+2:(i==4&&S.pastel);return`<button data-p="${i}" class="shrink-0 h-10 px-4 rounded-full text-sm font-semibold transition ${on?"bg-black text-white":"bg-[#EFEFEF] text-black hover:bg-[#e2e2e2]"}">${t}</button>`}).join("")}
 function render(anim){pills();$("filters").style.display=S.tab=="home"?"flex":"none";$("tabSaved").style.background=S.tab=="saved"?"#EFEFEF":"";
  const list=(S.tab=="home"?S.pals:S.saved).filter(match);
- $("grid").innerHTML=list.map((p,i)=>`<div class="card group relative mb-4 break-inside-avoid rounded-2xl overflow-hidden cursor-pointer bg-white ${anim?"fade":""}" style="animation-delay:${i*40}ms" data-id="${p.id}">
- <div class="relative flex flex-col" style="height:${p.h}px">${p.c.map(c=>`<div class="flex-1 flex items-end px-3 pb-2" style="background:${c}"><span class="text-[11px] font-medium text-black/70 opacity-0 group-hover:opacity-100 transition">${c}</span></div>`).join("")}
+ $("grid").innerHTML=list.map((p,i)=>`<div class="card group relative mb-4 break-inside-avoid rounded-2xl overflow-hidden cursor-pointer bg-white ${anim?"fade":""}" style="animation-delay:${i*40}ms" data-id="${p.id}" role="button" tabindex="0" aria-label="Open palette ${p.name}">
+ <div class="relative flex flex-col" style="height:${p.h}px">${p.c.map(c=>`<div class="flex-1 flex items-end px-3 pb-2" style="background:${c}"><span class="text-[11px] font-medium text-black/70 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100 transition">${c}</span></div>`).join("")}
  <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition pointer-events-none"></div>
- <button data-save="${p.id}" class="absolute top-3 right-3 h-9 px-4 rounded-full text-sm font-semibold text-white ${isSaved(p)?"bg-black":"bg-[#E60023] hover:bg-[#ad081b]"} opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition">${isSaved(p)?"Saved":"Save"}</button></div>
+ <button data-save="${p.id}" aria-label="${isSaved(p)?"Unsave":"Save"} ${p.name}" class="absolute top-3 right-3 h-9 px-4 rounded-full text-sm font-semibold text-white ${isSaved(p)?"bg-black":"bg-[#E60023] hover:bg-[#ad081b]"} opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100 [@media(hover:none)]:opacity-100 transition">${isSaved(p)?"Saved":"Save"}</button></div>
  <div class="px-1 pt-2 pb-1"><div class="font-bold text-sm">${p.name}</div><div class="text-xs text-neutral-500">${FP[p.f].join(" + ")}</div></div></div>`).join("");
  $("empty").classList.toggle("hidden",list.length>0);$("empty").textContent=S.tab=="saved"?"No saved palettes match.":"No palettes match your search."}
 const find=id=>S.pals.find(p=>p.id==id)||S.saved.find(p=>p.id==id);
-function toggleSave(p){if(isSaved(p))S.saved=S.saved.filter(s=>s.id!=p.id);else S.saved.unshift(JSON.parse(JSON.stringify(p)));persist()}
+function toggleSave(p){if(isSaved(p)){S.saved=S.saved.filter(s=>s.id!=p.id);toast("Removed from Saved")}else{S.saved.unshift(JSON.parse(JSON.stringify(p)));toast("Saved")}persist()}
 $("grid").onclick=e=>{const sb=e.target.closest("[data-save]");if(sb){toggleSave(find(sb.dataset.save));render();return}const c=e.target.closest(".card");if(c)openM(find(c.dataset.id))};
+$("grid").onkeydown=e=>{if((e.key=="Enter"||e.key==" ")&&e.target.classList.contains("card")){e.preventDefault();openM(find(e.target.dataset.id))}};
 $("filters").onclick=e=>{const b=e.target.closest("[data-p]");if(!b)return;const i=+b.dataset.p;if(i<4){S.count=i+2;gen()}else if(i==4){S.pastel=!S.pastel;gen()}else{S.pals.forEach(p=>p.f=Math.floor(Math.random()*FP.length));render(true)}};
 $("gen").onclick=()=>{S.tab="home";gen(true);window.scrollTo({top:0,behavior:"smooth"})};
 $("tabSaved").onclick=()=>{S.tab=S.tab=="saved"?"home":"saved";render(true)};
@@ -29,13 +30,14 @@ $("logo").onclick=()=>{S.tab="home";render(true)};
 $("q").oninput=e=>{S.q=e.target.value;render()};
 let M=null;
 const lockI=l=>l?'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 9V7a5 5 0 0 0-10 0v2H5v13h14V9h-2zm-8-2a3 3 0 0 1 6 0v2H9V7z"/></svg>':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="10" width="14" height="11" rx="1"/><path d="M8 10V7a4 4 0 0 1 7.5-2"/></svg>';
-function openM(p){M=p;$("modal").classList.remove("hidden");document.body.style.overflow="hidden";drawM()}
-function closeM(){$("modal").classList.add("hidden");document.body.style.overflow="";M=null}
+let LF=null;
+function openM(p){LF=document.activeElement;M=p;$("modal").classList.remove("hidden");document.body.style.overflow="hidden";drawM()}
+function closeM(){$("modal").classList.add("hidden");document.body.style.overflow="";M=null;if(LF&&LF.isConnected)LF.focus()}
 function drawM(pics){const p=M,[hf,bf]=FP[p.f];
- $("modal").innerHTML=`<div class="mo bg-white rounded-3xl max-w-2xl mx-auto my-4 p-4 sm:p-6 relative">
+ $("modal").innerHTML=`<div class="mo bg-white rounded-3xl max-w-2xl mx-auto my-4 p-4 sm:p-6 relative" role="dialog" aria-modal="true" aria-label="${p.name}">
  <button id="x" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-[#EFEFEF] hover:bg-[#e2e2e2] flex items-center justify-center text-lg z-10" aria-label="Close">&times;</button>
  <div class="font-bold text-xl mb-4 pr-10">${p.name}</div>
- <div class="flex rounded-2xl overflow-hidden h-44 sm:h-52">${p.c.map((c,i)=>`<div class="flex-1 flex flex-col justify-between items-center py-3" style="background:${c}"><button data-lock="${i}" class="w-8 h-8 rounded-full bg-white/70 hover:bg-white flex items-center justify-center" aria-label="Lock color">${lockI(p.l[i])}</button><button data-hex="${c}" class="text-xs font-semibold bg-white/70 hover:bg-white rounded-full px-2.5 py-1">${c}</button></div>`).join("")}</div>
+ <div class="flex rounded-2xl overflow-hidden h-44 sm:h-52">${p.c.map((c,i)=>`<div class="flex-1 flex flex-col justify-between items-center py-3" style="background:${c}"><button data-lock="${i}" class="w-8 h-8 rounded-full bg-white/70 hover:bg-white flex items-center justify-center" aria-label="${p.l[i]?"Unlock":"Lock"} color ${c}" aria-pressed="${p.l[i]}">${lockI(p.l[i])}</button><button data-hex="${c}" class="text-xs font-semibold bg-white/70 hover:bg-white rounded-full px-2.5 py-1">${c}</button></div>`).join("")}</div>
  <div class="mt-6"><div style="font-family:'${hf}';font-weight:600" class="text-2xl sm:text-3xl leading-tight">Hello, This is Your Heading</div>
  <div style="font-family:'${bf}'" class="mt-2 text-base text-neutral-700">This is your body text with this palette.</div>
  <div class="mt-3 text-xs text-neutral-500">Heading: ${hf} &nbsp;/&nbsp; Body: ${bf}</div></div>
@@ -45,15 +47,17 @@ function drawM(pics){const p=M,[hf,bf]=FP[p.f];
  <button id="mDl" class="h-11 px-5 rounded-full bg-[#EFEFEF] hover:bg-[#e2e2e2] text-sm font-semibold">Download Image</button>
  <button id="mFp" class="h-11 px-5 rounded-full bg-black text-white text-sm font-semibold">Find Pictures</button>
  <button id="mSv" class="h-11 px-5 rounded-full text-white text-sm font-semibold ${isSaved(p)?"bg-black":"bg-[#E60023]"}">${isSaved(p)?"Saved":"Save"}</button></div>
- ${pics?`<div class="columns-2 mt-6" style="column-gap:16px">${pics.map(s=>`<img src="${s}" alt="" class="w-full rounded-2xl mb-4 break-inside-avoid fade">`).join("")}</div>`:""}</div>`;
+ ${pics?`<div class="columns-2 mt-6" style="column-gap:16px">${pics.map(s=>`<img src="${s.u}" data-fb="${s.fb}" onerror="this.onerror=null;this.src=this.dataset.fb" loading="lazy" alt="Picture matching ${p.name}" class="w-full rounded-2xl mb-4 break-inside-avoid fade" style="min-height:160px;background:${p.c[0]}">`).join("")}</div>`:""}</div>`;
+ const ae=document.activeElement,sel=ae&&(ae.id?"#"+ae.id:ae.dataset&&ae.dataset.lock!=null?`[data-lock="${ae.dataset.lock}"]`:null);
  const m=$("modal");m.onclick=e=>{if(e.target===m||e.target.id=="x")closeM()};
  m.querySelectorAll("[data-lock]").forEach(b=>b.onclick=()=>{p.l[+b.dataset.lock]=!p.l[+b.dataset.lock];if(isSaved(p)){S.saved.find(s=>s.id==p.id).l=[...p.l];persist()}drawM(pics)});
  m.querySelectorAll("[data-hex]").forEach(b=>b.onclick=()=>copy(b.dataset.hex));
  $("mRe").onclick=()=>{p.c=p.c.map((c,i)=>p.l[i]?c:rc(P(FAM)));if(isSaved(p)){Object.assign(S.saved.find(s=>s.id==p.id),{c:[...p.c]});persist()}drawM(pics);render()};
  $("mCp").onclick=()=>copy(p.c.join(", "));
  $("mDl").onclick=()=>dl(p);
- $("mFp").onclick=()=>{drawM([0,1,2,3].map(k=>scene(p.c,k)));$("modal").scrollTo({top:9999,behavior:"smooth"})};
- $("mSv").onclick=()=>{toggleSave(p);drawM(pics);render()}}
+ $("mFp").onclick=()=>{drawM([0,1,2,3].map(k=>({u:photo(p.c[k%p.c.length],k),fb:scene(p.c,k)})));$("modal").scrollTo({top:9999,behavior:"smooth"})};
+ $("mSv").onclick=()=>{toggleSave(p);drawM(pics);render()};
+ (sel&&m.querySelector(sel)||$("x")).focus({preventScroll:true})}
 function scene(c,k){const H=[560,440,500,620][k],W=400,r=()=>Math.round(R(0,1)*100)/100,o=i=>c[i%c.length];let b="";
  if(k==0)b=`<circle cx="${R(100,300)}" cy="${R(120,220)}" r="${R(70,110)}" fill="${o(1)}"/><circle cx="${R(100,300)}" cy="${R(320,460)}" r="${R(50,90)}" fill="${o(2)}" opacity=".85"/>`;
  else if(k==1)b=[0,1,2].map(i=>`<path d="M${40+i*110} ${H} V${H-R(160,260)} a50 50 0 0 1 100 0 V${H}z" fill="${o(i+1)}"/>`).join("");
@@ -61,6 +65,8 @@ function scene(c,k){const H=[560,440,500,620][k],W=400,r=()=>Math.round(R(0,1)*1
  else b=[0,1,2,3,4].map(i=>`<rect x="${R(-20,260)}" y="${i*120+10}" width="${R(120,240)}" height="80" rx="40" fill="${o(i)}"/>`).join("");
  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${o(0)}"/><stop offset="1" stop-color="${o(2)}"/></linearGradient></defs><rect width="${W}" height="${H}" fill="${k==3?o(1):"url(#g)"}"/>${b}</svg>`;
  return"data:image/svg+xml;utf8,"+encodeURIComponent(svg)}
+function hue(x){const r=parseInt(x.slice(1,3),16)/255,g=parseInt(x.slice(3,5),16)/255,b=parseInt(x.slice(5,7),16)/255,m=Math.max(r,g,b),n=Math.min(r,g,b),d=m-n;if(!d)return 0;const v=m==r?((g-b)/d)%6:m==g?(b-r)/d+2:(r-g)/d+4;return(v*60+360)%360}
+function photo(c,k){const h=hue(c),w=h>=330||h<15?"pink":h<40?"peach":h<70?"yellow":h<170?"green":h<230?"blue":h<275?"lavender":"purple";return`https://loremflickr.com/400/${[560,440,500,620][k]}/pastel,${w}?lock=${k+Math.floor(h)}`}
 async function dl(p){const[hf,bf]=FP[p.f];try{await document.fonts.load(`600 48px "${hf}"`);await document.fonts.load(`400 26px "${bf}"`)}catch(e){}
  const W=1200,H=800,cv=document.createElement("canvas");cv.width=W;cv.height=H;const x=cv.getContext("2d");
  const rr=(a,b,w,h,r)=>{x.beginPath();x.roundRect?x.roundRect(a,b,w,h,r):x.rect(a,b,w,h)};
@@ -75,5 +81,6 @@ async function dl(p){const[hf,bf]=FP[p.f];try{await document.fonts.load(`600 48p
  const a=document.createElement("a");a.href=url;a.download=n;document.body.appendChild(a);a.click();a.remove();
  const v=$("pv");v.classList.remove("hidden");v.innerHTML=`<div class="mo bg-white rounded-3xl p-4 max-w-xl w-full"><img src="${url}" class="w-full rounded-2xl" alt=""><div class="flex items-center justify-between mt-3 gap-2"><span class="text-xs text-neutral-500">Right-click or long-press the image to save it.</span><div class="flex gap-2"><a href="${url}" download="${n}" class="h-10 px-4 rounded-full bg-black text-white text-sm font-semibold flex items-center">Download</a><button id="pvx" class="h-10 px-4 rounded-full bg-[#EFEFEF] text-sm font-semibold">Close</button></div></div></div>`;
  v.onclick=e=>{if(e.target===v||e.target.id=="pvx")v.classList.add("hidden")}}
-document.addEventListener("keydown",e=>{if(e.key=="Escape"){$("pv").classList.add("hidden");if(M)closeM()}});
+document.addEventListener("keydown",e=>{if(e.key=="Escape"){$("pv").classList.add("hidden");if(M)closeM()}
+ if(e.key=="Tab"&&M&&$("pv").classList.contains("hidden")){const f=[...$("modal").querySelectorAll("button,a[href]")];if(!f.length)return;const a=f[0],z=f[f.length-1];if(!$("modal").contains(document.activeElement)){e.preventDefault();a.focus()}else if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}});
 gen();

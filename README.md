@@ -1,90 +1,121 @@
 # Pair Me
 
-A minimal, Pinterest-inspired color palette generator for discovering harmonious color combinations and matching Google Font pairings.
+A minimal, Pinterest-inspired color palette generator that helps you discover beautiful pastel color combinations and matching Google Font pairings.
 
-**Live demo:** https://jc-glitchsys.github.io/pair-me/
+**[Explore Pair Me →](https://jc-glitchsys.github.io/pair-me/)**
+
+---
+
+## Preview
+
+Discover soft pastel palettes, explore typography combinations, and save your favorite color inspirations in one place.
 
 ## Features
 
-- Generate palettes with 2–5 colors.
-- Explore soft pastel and more saturated color combinations.
-- Browse curated Google Font pairings and shuffle typography.
-- Lock individual colors while regenerating the rest.
-- Copy individual HEX values or an entire palette.
-- Save and unsave favorite palettes with toast feedback.
-- Prevent duplicate saved palettes.
-- Search by palette name, HEX code, or font.
-- Explore curated photography hosted by Unsplash, with graceful image fallbacks.
-- Download a palette preview as a PNG.
-- Responsive layout, keyboard navigation, focus management, and reduced-motion support.
-- Saved palettes persist in browser localStorage.
+- **Palette Generation** – Generate 12 unique color palettes at a time.
+- **Color Filters** – Choose between 2, 3, 4, or 5 colors per palette.
+- **Pastel Mode** – Explore softer, lighter color combinations.
+- **Font Pairings** – Discover complementary heading and body font combinations.
+- **Shuffle Fonts** – Randomize typography while keeping your current palettes.
+- **Color Locking** – Keep selected colors when generating new palettes.
+- **Palette Details** – View individual colors, HEX codes, and font previews.
+- **Copy HEX Codes** – Quickly copy individual colors or an entire palette.
+- **Download Palettes** – Export palette designs as PNG images.
+- **Find Pictures** – Explore visual inspiration based on palette colors.
+- **Save Favorites** – Save palettes and access them through the Saved tab.
+- **Search** – Find saved palettes by name, HEX code, or font name.
+- **Responsive Layout** – Browse palettes on desktop and mobile devices.
 
-## Tech stack
+## Tech Stack
 
-- HTML5
-- Tailwind CSS 3.4.17
-- Vanilla JavaScript with ES modules
-- Vite
-- PostCSS and Autoprefixer
-- Google Fonts
-- Unsplash-hosted photography
-- Canvas API
-- localStorage
+| Technology | Purpose |
+|---|---|
+| HTML5 | Website structure |
+| CSS3 | Custom styling and animations |
+| JavaScript | Palette generation and interactions |
+| Tailwind CSS 3.4.17 | Utility-first styling |
+| Google Fonts | Typography pairings |
+| LocalStorage | Saving favorite palettes |
+| HTML Canvas | PNG image exporting |
+| SVG | Generated visual scenes |
 
-## Project structure
+## Project Structure
 
 ```text
 pair-me/
+│
 ├── index.html
-├── package.json
-├── postcss.config.js
-├── tailwind.config.js
-├── vite.config.js
-├── .gitignore
+│
 ├── css/
 │   └── style.css
+│
 ├── js/
-│   ├── app.js
-│   ├── color.js
 │   ├── data.js
-│   ├── images.js
-│   ├── storage.js
-│   └── ui.js
+│   └── app.js
+│
 └── README.md
 ```
 
-## Run locally
+## Getting Started
 
-Install [Node.js](https://nodejs.org/) first.
+Pair Me does not require a build process or backend.
 
-```bash
-npm install
-npm run dev
-```
-
-Vite will print a local development URL in your terminal.
-
-## Production build
+1. Clone the repository:
 
 ```bash
-npm run build
-npm run preview
+git clone https://github.com/JC-glitchsys/pair-me.git
 ```
 
-The optimized production site is generated in the `dist/` folder.
+2. Navigate to the project folder:
 
-## Deploy to GitHub Pages
+```bash
+cd pair-me
+```
 
-For a project site hosted at `https://<username>.github.io/pair-me/`, set the Vite base path to `/pair-me/` in `vite.config.js` (included in the repository) before building. Then deploy the contents of `dist/` using GitHub Actions or your preferred Pages workflow.
+3. Open `index.html` in your browser.
 
-## Photography
+Alternatively, use a local development server for a smoother development experience.
 
-Photo inspiration uses curated image URLs hosted by Unsplash. The integration does not require an API key. An image that fails to load is gracefully hidden so the rest of the palette experience remains usable.
+## Live Demo
 
-## Accessibility
+**[https://jc-glitchsys.github.io/pair-me/](https://jc-glitchsys.github.io/pair-me/)**
 
-Pair Me includes semantic buttons, accessible labels, visible keyboard focus, keyboard-operable palette cards, modal focus trapping, Escape-to-close behavior, live toast announcements, and reduced-motion support.
+## Design Philosophy
+
+Pair Me follows a minimal and clean visual direction:
+
+- Pure white background
+- Inter typography for the interface
+- Soft pastel color combinations
+- Rounded palette cards
+- Subtle transitions and animations
+- Pinterest-inspired masonry layout
+- Simple and intuitive interactions
+
+The goal is to make discovering color combinations and typography both enjoyable and effortless.
+
+## Future Improvements
+
+- [ ] Integrate real Unsplash photography.
+- [ ] Improve mobile HEX code interactions.
+- [ ] Enhance keyboard navigation and accessibility.
+- [ ] Add save and unsave toast notifications.
+- [ ] Improve palette color distribution.
+- [ ] Prevent duplicate saved palettes.
+- [ ] Refactor JavaScript into separate modules.
+- [ ] Optimize rendering performance.
+- [ ] Replace Tailwind CDN with a production-ready setup.
+
+## Deployment
+
+Pair Me is hosted using **GitHub Pages**.
+
+Every update pushed to the configured deployment branch can be published through GitHub Pages.
 
 ## License
 
-No license has been specified. Add a `LICENSE` file if you want to grant others explicit permission to reuse or modify this project.
+This project is intended for personal and educational use.
+
+---
+
+**Pair Me** — Find your colors. Match your fonts. Create your palette.

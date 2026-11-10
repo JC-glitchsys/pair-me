@@ -1,3 +1,20 @@
-// Font pairings [heading, body] and pastel hue families
-const FP=[["Playfair Display","Inter"],["DM Serif Display","DM Sans"],["Lora","Poppins"],["Fraunces","Work Sans"],["Montserrat","Lora"],["Cormorant Garamond","Nunito"],["Space Grotesk","Inter"],["Raleway","Lora"],["Poppins","Work Sans"],["Playfair Display","Nunito"]];
-const FAM=[{h:340,n:["Blush Pink","Rose Petal","Cotton Candy"]},{h:265,n:["Lavender Mist","Soft Lilac","Violet Whisper"]},{h:150,n:["Mint Cream","Sage Breeze","Fresh Mint"]},{h:22,n:["Soft Peach","Apricot Cream","Peach Fuzz"]},{h:200,n:["Baby Blue","Sky Whisper","Powder Blue"]},{h:50,n:["Butter Yellow","Vanilla Cream","Lemon Chiffon"]},{h:285,n:["Lilac Haze","Orchid Mist","Wisteria"]}];
+// Curated font pairings and pastel hue families used by the palette generator.
+export const FONT_PAIRS = [
+  ["Playfair Display", "Inter"], ["DM Serif Display", "DM Sans"],
+  ["Lora", "Poppins"], ["Fraunces", "Work Sans"],
+  ["Montserrat", "Lora"], ["Cormorant Garamond", "Nunito"],
+  ["Space Grotesk", "Inter"], ["Raleway", "Lora"],
+  ["Poppins", "Work Sans"], ["Playfair Display", "Nunito"],
+];
+
+export const HUE_FAMILIES = [
+  { hue: 340, names: ["Blush Pink", "Rose Petal", "Cotton Candy"] },
+  { hue: 265, names: ["Lavender Mist", "Soft Lilac", "Violet Whisper"] },
+  { hue: 150, names: ["Mint Cream", "Sage Breeze", "Fresh Mint"] },
+  { hue: 22, names: ["Soft Peach", "Apricot Cream", "Peach Fuzz"] },
+  { hue: 200, names: ["Baby Blue", "Sky Whisper", "Powder Blue"] },
+  { hue: 50, names: ["Butter Yellow", "Vanilla Cream", "Lemon Chiffon"] },
+  { hue: 285, names: ["Lilac Haze", "Orchid Mist", "Wisteria"] },
+];
+
+export const INITIAL_PALETTE_COUNT = 12;

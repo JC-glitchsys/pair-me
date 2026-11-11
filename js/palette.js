@@ -9,7 +9,11 @@ const light=x=>{const v=[1,3,5].map(i=>parseInt(x.slice(i,i+2),16));return(Math.
 function pick(hs,h0){let h,t=0;do{h=(h0??P(FAM).h)+R(-8,8);t++}while(t<25&&hs.some(x=>dh(x,h)<25));return hex(h,R(55,85),S.pastel?R(88,94):R(80,90))}
 export function nameOf(c){const d=c.reduce((a,b)=>light(b)<light(a)?b:a),h=hue(d);return P(FAM.reduce((a,b)=>dh(b.h,h)<dh(a.h,h)?b:a).n)}
 function fill(c,l,h0){const hs=c.filter((_,i)=>l[i]).map(hue);return c.map((x,i)=>{if(l[i])return x;const n=pick(hs,i==0?h0:undefined);hs.push(hue(n));return n})}
-export function mk(L=[]){const l=Array.from({length:S.count},(_,i)=>!!L[i]),c=fill(l.map((x,i)=>x?L[i]:""),l,P(FAM).h);return{id:Math.random().toString(36).slice(2),name:nameOf(c),c,l,moods:moodsOf(c),fonts:P(FP),category:"Pastel",source:"generated",n:performance.now(),h:Math.round(R(170,290))}}
+const OFF={analogous:[0,28,-28,56,-56],complementary:[0,180,22,202,-22],triadic:[0,120,240,60,180],split:[0,150,210,30,-30],tetradic:[0,90,180,270,45],mono:[0,0,0,0,0]};
+// Harmony generation: base color (exact, slot 1) or random hue, other colors follow the chosen harmony.
+function harmonize(l,L){const g=S.g,k=g.harmony=="any"?"analogous":g.harmony,h0=g.base?hue(g.base):R(0,360);
+ return l.map((x,i)=>x?L[i]:(i==0&&g.base)?g.base.toUpperCase():k=="mono"?hex(h0,R(55,75),[92,84,76,68,60][i]):hex(h0+OFF[k][i]+R(-4,4),R(55,85),S.pastel?R(88,94):R(80,90)))}
+export function mk(L=[]){const l=Array.from({length:S.count},(_,i)=>!!L[i]),c=S.g.base||S.g.harmony!="any"?harmonize(l,L):fill(l.map((x,i)=>x?L[i]:""),l,P(FAM).h);return{id:Math.random().toString(36).slice(2),name:nameOf(c),c,l,moods:moodsOf(c),fonts:P(FP),category:S.g.base||S.g.harmony!="any"?"Custom":"Pastel",source:"generated",n:performance.now(),h:Math.round(R(170,290))}}
 export function regen(p){p.c=fill(p.c,p.l);p.name=nameOf(p.c);p.moods=moodsOf(p.c);if(p.source=="curated"){p.source="generated";p.id="g"+Math.random().toString(36).slice(2)}} // editing a curated palette makes it a generated one
 export function scene(c,k){const H=[560,440,500,620][k],W=400,r=()=>Math.round(R(0,1)*100)/100,o=i=>c[i%c.length];let b="";
  if(k==0)b=`<circle cx="${R(100,300)}" cy="${R(120,220)}" r="${R(70,110)}" fill="${o(1)}"/><circle cx="${R(100,300)}" cy="${R(320,460)}" r="${R(50,90)}" fill="${o(2)}" opacity=".85"/>`;

@@ -2,7 +2,7 @@
 import { $, copy } from "./util.js";
 import { S, persist, isSaved, toggleSave, shareURL } from "./storage.js";
 import { regen } from "./palette.js";
-import { getPhotos } from "./images.js";
+import { previews } from "./mockups.js";
 import { dl, fmt } from "./export.js";
 import { render } from "./app.js"; // circular on purpose: only called at runtime
 let M=null;
@@ -23,10 +23,10 @@ function drawM(pics){const p=M,[hf,bf]=p.fonts,ready=document.fonts.check(`600 2
  <button id="mCp" class="h-11 px-5 rounded-full bg-[#EFEFEF] hover:bg-[#e2e2e2] text-sm font-semibold">Copy Hex</button>
  <button id="mDl" class="h-11 px-5 rounded-full bg-[#EFEFEF] hover:bg-[#e2e2e2] text-sm font-semibold">Download Image</button>
  <button id="mSh" class="h-11 px-5 rounded-full bg-[#EFEFEF] hover:bg-[#e2e2e2] text-sm font-semibold">Share Link</button>
- <button id="mFp" class="h-11 px-5 rounded-full bg-black text-white text-sm font-semibold">Find Pictures</button>
+ <button id="mFp" class="h-11 px-5 rounded-full bg-black text-white text-sm font-semibold">Design Previews</button>
  <button id="mSv" class="h-11 px-5 rounded-full text-white text-sm font-semibold ${isSaved(p)?"bg-black":"bg-[#E60023]"}">${isSaved(p)?"Saved":"Save"}</button></div>
  <div class="flex flex-wrap items-center gap-2 mt-3"><span class="text-xs text-neutral-500 mr-1">Copy as</span>${[["css","CSS"],["tailwind","Tailwind"],["json","JSON"]].map(([k,t])=>`<button data-exp="${k}" class="min-h-[44px] px-4 rounded-full bg-[#EFEFEF] hover:bg-[#e2e2e2] text-sm font-semibold">${t}</button>`).join("")}</div>
- ${pics?`<div class="columns-2 mt-6" style="column-gap:16px">${(pics==="loading"?[220,160,200,240].map(h=>`<div class="sk rounded-2xl mb-4 break-inside-avoid" style="height:${h}px"></div>`):pics.map(s=>`<div class="sk rounded-2xl mb-4 break-inside-avoid overflow-hidden" style="min-height:180px"><img src="${s.u}" data-fb="${s.fb}" onerror="this.onerror=null;this.src=this.dataset.fb" onload="this.classList.remove('opacity-0');this.parentNode.classList.remove('sk')" loading="lazy" alt="Inspiration photo for ${p.name}" class="opacity-0 transition-opacity duration-500 w-full block"></div>`)).join("")}</div>`:""}</div>`;
+ ${pics?previews(p,hf,bf):""}</div>`;
  const ae=document.activeElement,sel=ae&&(ae.id?"#"+ae.id:ae.dataset&&ae.dataset.lock!=null?`[data-lock="${ae.dataset.lock}"]`:null);
  const m=$("modal");m.onclick=e=>{if(e.target===m||e.target.id=="x")closeM()};
  m.querySelectorAll("[data-lock]").forEach(b=>b.onclick=()=>{p.l[+b.dataset.lock]=!p.l[+b.dataset.lock];if(isSaved(p)){S.saved.find(s=>s.id==p.id).l=[...p.l];persist()}drawM(pics)});
@@ -36,7 +36,7 @@ function drawM(pics){const p=M,[hf,bf]=p.fonts,ready=document.fonts.check(`600 2
  $("mDl").onclick=()=>dl(p);
  m.querySelectorAll("[data-exp]").forEach(b=>b.onclick=()=>copy(fmt(p,b.dataset.exp),"Copied as "+b.textContent));
  $("mSh").onclick=()=>copy(shareURL(p));
- $("mFp").onclick=async()=>{drawM("loading");$("modal").scrollTo({top:9999,behavior:"smooth"});const ph=await getPhotos(p);if(M===p){drawM(ph);$("modal").scrollTo({top:9999,behavior:"smooth"})}};
+ $("mFp").onclick=()=>{drawM(true);$("prev").scrollIntoView({behavior:"smooth",block:"start"})};
  $("mSv").onclick=()=>{toggleSave(p);drawM(pics);render()};
  if(!ready)Promise.all([document.fonts.load(`600 24px "${hf}"`),document.fonts.load(`400 16px "${bf}"`)]).catch(()=>{}).then(()=>{const f=$("fp");if(f&&M===p)f.classList.remove("sk","sk-t","rounded-xl")});
  (sel&&m.querySelector(sel)||$("x")).focus({preventScroll:true})}

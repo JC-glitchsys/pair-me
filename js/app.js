@@ -8,10 +8,9 @@ import { mk } from "./palette.js";
 import { openM } from "./modal.js";
 export function gen(carry){const L=carry?[...new Set([...S.pals,...S.saved,S.work].filter(Boolean).flatMap(p=>p.c.filter((_,i)=>p.l[i])))].slice(0,S.count):[];S.pals=Array.from({length:12},()=>mk(L));render(true)}
 const pill=(a,v,t,on)=>`<button data-${a}="${v}" aria-pressed="${on}" class="shrink-0 h-11 px-4 rounded-full text-sm font-semibold transition ${on?"bg-black text-white":"bg-[#EFEFEF] text-black hover:bg-[#e2e2e2]"}">${t}</button>`;
-function pills(){const r1=[["curated","Curated"],["generated","Generated"]].map(([v,t])=>pill("src",v,t,S.src==v)).join("")+'<span class="w-px bg-[#EFEFEF] mx-1 shrink-0"></span>'+[["newest","Newest"],["az","A-Z"],["shuffle","Shuffle"]].map(([v,t])=>pill("sort",v,t,S.sort==v&&v!="shuffle")).join("");
- const r2=S.src=="curated"?["All",...CATEGORIES].map(c=>pill("cat",c,c,S.cat==c)).join(""):[2,3,4,5].map(n=>pill("count",n,n+" Colors",S.count==n)).join("")+pill("pastel",1,"Pastel",S.pastel)+pill("fonts",1,"Shuffle Fonts",false);
- const r3=["All",...MOODS].map(m=>pill("mood",m,m=="All"?"Any mood":m,S.mood==m)).join("");
- $("filters").innerHTML=`${[r1,r2,r3].map(r=>`<div class="flex gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible">${r}</div>`).join("")}`}
+const sel=(id,label,opts,val,def)=>`<select id="${id}" aria-label="${label}" class="sel h-11 rounded-full px-4 text-sm font-semibold ${val!=def?"sel-on":""}">${opts.map(([v,t])=>`<option value="${v}"${v==val?" selected":""}>${t}</option>`).join("")}</select>`;
+function pills(){const g=S.src=="generated";
+ $("filters").innerHTML=`<div class="flex flex-wrap items-center gap-2">${[["curated","Curated"],["generated","Generated"]].map(([v,t])=>pill("src",v,t,S.src==v)).join("")}<span class="w-px h-6 bg-[#E0E0E0] mx-1"></span>${g?"":sel("fCat","Category",[["All","All categories"],...CATEGORIES.map(c=>[c,c])],S.cat,"All")}${sel("fMood","Mood",[["All","Any mood"],...MOODS.map(m=>[m,m])],S.mood,"All")}${sel("fSort","Sort",[["newest","Newest"],["az","A-Z"],...(S.sort=="shuffle"?[["shuffle","Shuffled"]]:[])],S.sort,"newest")}${pill("shuf",1,"Shuffle",false)}${g?pill("fonts",1,"Shuffle Fonts",false):""}</div>`}
 const card=(p,i,anim)=>{const on=isSaved(p);return`<div class="card group relative mb-4 break-inside-avoid rounded-2xl overflow-hidden cursor-pointer bg-white ${anim?"fade":""}" style="animation-delay:${Math.min(i,12)*40}ms" data-id="${p.id}" data-cat="${p.category}" data-m=",${p.moods.join(",").toLowerCase()}," data-s="${[p.name,p.category,p.moods.join(" "),p.fonts.join(" "),p.c.join(" "),p.c.map(x=>x.slice(1)).join(" ")].join(" ").toLowerCase()}" role="button" tabindex="0" aria-label="Open palette ${p.name}">
  <div class="relative flex flex-col" style="height:${p.h}px">${p.c.map(c=>`<div class="flex-1 flex items-end px-3 pb-2" style="background:${c}"><span data-hex="${c}" style="color:${ink(c)}" class="py-2 text-[11px] font-medium opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100 transition">${c}</span></div>`).join("")}
  <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition pointer-events-none"></div>
@@ -33,12 +32,9 @@ $("grid").onclick=e=>{const hx=e.target.closest("[data-hex]");if(hx){copy(hx.dat
 $("grid").onkeydown=e=>{if((e.key=="Enter"||e.key==" ")&&e.target.classList.contains("card")){e.preventDefault();openM(find(e.target.dataset.id))}};
 $("filters").onclick=e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
  if(d.src){S.src=d.src;S.src=="generated"&&!S.pals.length?gen():render(true)}
- else if(d.cat){S.cat=d.cat;pills();applyFilter()}
- else if(d.mood){S.mood=d.mood;pills();applyFilter()}
- else if(d.sort){S.sort=d.sort;render(true)}
- else if(d.count){S.count=+d.count;gen()}
- else if(d.pastel){S.pastel=!S.pastel;gen()}
+ else if(d.shuf){S.sort="shuffle";render(true)}
  else if(d.fonts){S.pals.forEach(p=>p.fonts=P(FP));render(true)}};
+$("filters").onchange=e=>{const t=e.target,id=t.id;if(id=="fCat"){S.cat=t.value;pills();applyFilter()}else if(id=="fMood"){S.mood=t.value;pills();applyFilter()}else if(id=="fSort"){S.sort=t.value;render(true)}else return;$(id)&&$(id).focus()};
 $("gen").onclick=()=>{S.tab="home";S.src="generated";gen(true);toGrid()};
 $("heroGen").onclick=()=>$("gen").click();
 $("heroExplore").onclick=toGrid;
@@ -48,6 +44,33 @@ $("emptyB").onclick=()=>{if($("emptyB").dataset.a=="browse"){S.tab="home";render
 let tm;$("q").oninput=e=>{clearTimeout(tm);tm=setTimeout(()=>{S.q=e.target.value;applyFilter()},250)};
 window.addEventListener("hashchange",()=>{const sp=fromHash();if(sp)openM(sp)});
 $("sTog").onclick=()=>{const o=$("sWrap").classList.toggle("hidden");$("sTog").setAttribute("aria-expanded",String(!o));if(!o)$("q").focus()};
-$("hero").hidden=false;$("hero").classList.add("fade");$("heroSk").remove();
+$("hero").hidden=false;$("heroSk").remove();
+const HZ=[["any","Any"],["analogous","Analogous"],["complementary","Complementary"],["triadic","Triadic"],["split","Split"],["tetradic","Tetradic"],["mono","Monochrome"]];
+const gMark=()=>$("gdot").classList.toggle("hidden",!(S.g.base||S.g.harmony!="any"));
+function drawG(){const g=S.g,ae=document.activeElement,k=ae&&ae.closest&&ae.closest("#gpanel")?[ae.dataset.gh&&`[data-gh="${ae.dataset.gh}"]`,ae.dataset.gc&&`[data-gc="${ae.dataset.gc}"]`,"gp" in ae.dataset&&"[data-gp]"].find(Boolean):null;
+ $("gpanel").innerHTML=`<div class="flex items-center justify-between"><h2 class="font-bold text-lg">Customize Generate</h2><button data-gx aria-label="Close" class="w-11 h-11 -mr-2 rounded-full hover:bg-[#EFEFEF] text-xl">&times;</button></div>
+ <div class="mt-3 text-xs font-semibold tracking-wide text-neutral-500">BASE COLOR</div>
+ <div class="mt-2 flex items-center gap-3"><input id="gBase" type="color" aria-label="Base color" value="${(g.base||"#FFC8DD").toLowerCase()}" class="w-11 h-11 rounded-full border-0 p-0 bg-transparent cursor-pointer"><span id="gLab" class="text-sm font-semibold">${g.base||"Random"}</span>${g.base?`<button data-gr class="ml-auto h-11 px-4 rounded-full bg-[#EFEFEF] text-sm font-semibold">Random</button>`:""}</div>
+ <div class="mt-4 text-xs font-semibold tracking-wide text-neutral-500">HARMONY</div>
+ <div class="mt-2 flex flex-wrap gap-2">${HZ.map(([v,t])=>pill("gh",v,t,g.harmony==v)).join("")}</div>
+ <div class="mt-4 text-xs font-semibold tracking-wide text-neutral-500">COLORS</div>
+ <div class="mt-2 flex flex-wrap gap-2">${[2,3,4,5].map(n=>pill("gc",n,n,S.count==n)).join("")}${pill("gp",1,"Pastel only",S.pastel)}</div>
+ <button data-gg class="mt-5 w-full h-12 rounded-full bg-black text-white text-sm font-semibold">Generate</button>`;
+ gMark();if(k){const el=$("gpanel").querySelector(k);el&&el.focus()}}
+function gOpen(o){$("gpanel").classList.toggle("hidden",!o);$("gback").classList.toggle("hidden",!o);$("gset").setAttribute("aria-expanded",String(o));if(o){drawG();$("gpanel").querySelector("button").focus()}else $("gset").focus()}
+$("gset").onclick=()=>gOpen($("gpanel").classList.contains("hidden"));
+$("gback").onclick=()=>gOpen(false);
+$("gpanel").onclick=e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
+ if("gx" in d)gOpen(false);else if("gr" in d){S.g.base="";drawG()}else if(d.gh){S.g.harmony=d.gh;drawG()}else if(d.gc){S.count=+d.gc;drawG()}else if("gp" in d){S.pastel=!S.pastel;drawG()}else if("gg" in d){gOpen(false);$("gen").click()}};
+$("gpanel").oninput=e=>{if(e.target.id=="gBase"){S.g.base=e.target.value.toUpperCase();$("gLab").textContent=S.g.base;gMark()}};
+$("gpanel").onchange=e=>{if(e.target.id=="gBase")drawG()};
+document.addEventListener("keydown",e=>{if(e.key=="Escape"&&!$("gpanel").classList.contains("hidden"))gOpen(false)});
+// Hero: live palette strip that cycles through curated palettes
+const pool=CURATED.filter(p=>p.c.length>=4),lum=x=>[1,3,5].reduce((s,i,k)=>s+parseInt(x.slice(i,i+2),16)*[.299,.587,.114][k],0)/255;
+let hi=Math.floor(Math.random()*pool.length),hp;
+function heroLive(){hp=pool[hi%pool.length];const bl=$("hStrip").children;for(let k=0;k<5;k++){const b=bl[k],c=hp.c[k];if(c){b.style.flexGrow=1;b.style.backgroundColor=c;b.style.color=ink(c);b.textContent=c}else{b.style.flexGrow=0;b.textContent=""}}
+ const hl=hp.c.filter(x=>lum(x)>.62&&lum(x)<.93).sort((x,y)=>lum(x)-lum(y))[0]||"#FFC8DD";$("hero").style.setProperty("--hl",hl);$("hCap").textContent=hp.name+"  ·  "+hp.fonts.join(" + ")}
+$("hStrip").onclick=()=>openM(hp);
+heroLive();if(!matchMedia("(prefers-reduced-motion: reduce)").matches)setInterval(()=>{if(!document.hidden&&S.tab=="home"){hi++;heroLive()}},3800);
 render(true);
 {const sp=fromHash();if(sp)openM(sp)}

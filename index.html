@@ -19,7 +19,7 @@
   <div id="sWrap" class="hidden sm:block sm:flex-1 min-w-0 w-full sm:w-auto order-last sm:order-none pb-1 sm:pb-0"><input id="q" type="text" aria-label="Search palettes" placeholder="Search colors, fonts, palettes" class="w-full h-12 rounded-full bg-[#EFEFEF] px-5 text-sm outline-none focus:ring-2 focus:ring-black/20"></div>
   <span class="flex-1 sm:hidden"></span>
   <button id="sTog" aria-label="Search" aria-expanded="false" aria-controls="sWrap" class="sm:hidden w-11 h-11 rounded-full hover:bg-[#EFEFEF] flex items-center justify-center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
-  <nav aria-label="Main" class="flex items-center gap-2"><button id="tabSaved" class="text-sm font-semibold px-3 min-h-[44px] rounded-full hover:bg-[#EFEFEF] transition">Saved</button><button id="gen" class="h-11 px-5 rounded-full bg-black text-white text-sm font-semibold hover:bg-neutral-800 transition">Generate</button></nav>
+  <nav aria-label="Main" class="flex items-center gap-2"><button id="tabSaved" class="text-sm font-semibold px-3 min-h-[44px] rounded-full hover:bg-[#EFEFEF] transition">Saved</button><button id="gset" aria-label="Customize generate" aria-expanded="false" aria-controls="gpanel" class="relative w-11 h-11 rounded-full hover:bg-[#EFEFEF] flex items-center justify-center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span id="gdot" class="hidden absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-[#E60023]"></span></button><button id="gen" class="h-11 px-5 rounded-full bg-black text-white text-sm font-semibold hover:bg-neutral-800 transition">Generate</button></nav>
  </div>
 </header>
 <main>
@@ -32,13 +32,17 @@
   <span class="sw hidden sm:block" style="top:58%;right:9%;width:64px;height:64px;background:#E4D4F4;--r:-10deg;animation-delay:-1s"></span>
   <span class="sw hidden lg:block" style="top:34%;right:22%;width:34px;height:34px;background:#FFF1B6;--r:6deg;animation-delay:-3s"></span>
  </div>
- <div class="relative max-w-3xl mx-auto text-center">
-  <p class="text-xs font-semibold tracking-[.18em] text-neutral-500">COLOR INSPIRATION STUDIO</p>
-  <h1 class="mt-4 font-bold tracking-tight text-[40px] leading-[1.05] sm:text-6xl lg:text-7xl">Find your perfect color pairing.</h1>
-  <p class="mt-5 text-base sm:text-lg text-neutral-600 max-w-xl mx-auto">Discover beautiful palettes, explore typography, and create something that feels like you.</p>
-  <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+ <div class="relative max-w-4xl mx-auto text-center">
+  <p class="rise text-xs font-semibold tracking-[.18em] text-neutral-500">COLOR INSPIRATION STUDIO</p>
+  <h1 class="rise mt-4 font-bold tracking-tight text-[40px] leading-[1.05] sm:text-6xl lg:text-7xl" style="animation-delay:.08s">Find your perfect <span class="hl">color pairing.</span></h1>
+  <p class="rise mt-5 text-base sm:text-lg text-neutral-600 max-w-xl mx-auto" style="animation-delay:.16s">Discover beautiful palettes, explore typography, and create something that feels like you.</p>
+  <div class="rise mt-8 flex flex-col sm:flex-row gap-3 justify-center" style="animation-delay:.24s">
    <button id="heroExplore" class="h-12 px-7 rounded-full bg-black text-white text-sm font-semibold hover:bg-neutral-800 transition">Explore Palettes</button>
    <button id="heroGen" class="h-12 px-7 rounded-full bg-[#EFEFEF] text-black text-sm font-semibold hover:bg-[#e2e2e2] transition">Generate a Palette</button>
+  </div>
+  <div class="rise mt-12 sm:mt-16 max-w-3xl mx-auto" style="animation-delay:.34s">
+   <button id="hStrip" type="button" aria-label="Open the featured palette" class="flex w-full h-36 sm:h-48 rounded-3xl overflow-hidden text-left shadow-[0_12px_40px_rgba(0,0,0,.08)]"><span class="hb flex-1 flex items-end p-3 text-[11px] sm:text-xs font-semibold"></span><span class="hb flex-1 flex items-end p-3 text-[11px] sm:text-xs font-semibold"></span><span class="hb flex-1 flex items-end p-3 text-[11px] sm:text-xs font-semibold"></span><span class="hb flex-1 flex items-end p-3 text-[11px] sm:text-xs font-semibold"></span><span class="hb flex-1 flex items-end p-3 text-[11px] sm:text-xs font-semibold"></span></button>
+   <p id="hCap" class="mt-3 text-sm text-neutral-500"></p>
   </div>
  </div>
 </section>
@@ -48,5 +52,6 @@
 </main>
 <div id="modal" class="hidden flex fixed inset-0 z-[70] bg-black/50 sm:p-6 overflow-y-auto"></div>
 <div id="pv" class="hidden fixed inset-0 z-[80] bg-black/60 p-4 flex items-center justify-center"></div>
+<div id="gback" class="hidden fixed inset-0 z-[64]"></div><div id="gpanel" role="dialog" aria-label="Customize generate" class="hidden fixed z-[65] inset-x-3 bottom-3 sm:inset-x-auto sm:bottom-auto sm:right-5 sm:top-[76px] sm:w-[340px] bg-white rounded-3xl p-5 border border-[#EFEFEF] shadow-[0_16px_48px_rgba(0,0,0,.16)]" style="margin-bottom:env(safe-area-inset-bottom,0px)"></div>
 <div id="toast" role="status" aria-live="polite" class="fixed left-1/2 -translate-x-1/2 bottom-6 z-[90] bg-black text-white text-sm px-4 py-2 rounded-full opacity-0 pointer-events-none transition-opacity"></div>
 <script type="module" src="js/app.js"></script></body></html>

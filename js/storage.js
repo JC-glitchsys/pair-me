@@ -3,7 +3,7 @@ import { toast } from "./util.js";
 import { FP } from "./data.js";
 import { CURATED } from "./palettes.js";
 import { moodsOf } from "./mood.js";
-export const S={count:3,pastel:false,tab:"home",src:"curated",cat:"All",mood:"All",sort:"newest",q:"",pals:[],saved:[]};
+export const S={count:3,pastel:false,tab:"home",src:"curated",cat:"All",mood:"All",g:{base:"",harmony:"any"},sort:"newest",q:"",pals:[],saved:[]};
 try{const raw=localStorage.getItem("pairme_saved_v2")??localStorage.getItem("pm_saved")??"[]",seen=new Set();S.saved=JSON.parse(raw).map(norm).filter(p=>p&&p.id&&!seen.has(p.id)&&seen.add(p.id));if(!localStorage.getItem("pairme_saved_v2")){localStorage.setItem("pairme_saved_v2",JSON.stringify(S.saved));localStorage.removeItem("pm_saved")}}catch(e){} // v2 key; migrates and de-duplicates the old pm_saved key
 export function persist(){try{localStorage.setItem("pairme_saved_v2",JSON.stringify(S.saved))}catch(e){}}
 export const isSaved=p=>S.saved.some(s=>s.id===p.id);

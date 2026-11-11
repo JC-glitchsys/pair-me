@@ -2,48 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: light; }
-html { scroll-padding-top: 5rem; }
-body {
-  margin: 0;
-  background: #fff;
-  color: #111;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-button, input { font: inherit; }
-button { -webkit-tap-highlight-color: transparent; }
-button:focus-visible, a:focus-visible, input:focus-visible, [tabindex="0"]:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 3px;
-}
-.card { content-visibility: auto; contain-intrinsic-size: 280px; }
-.palette-swatch { min-height: 48px; }
-.fade { animation: fade-in .35s ease both; }
-.modal-panel { animation: modal-in .2s ease both; }
-.photo-tile { break-inside: avoid; }
-.photo-tile img { display: block; width: 100%; object-fit: cover; }
-.hex-chip { touch-action: manipulation; }
-.toast-visible { opacity: 1; }
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(7px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes modal-in {
-  from { opacity: 0; transform: scale(.975); }
-  to { opacity: 1; transform: scale(1); }
-}
-@media (hover: hover) {
-  .card .card-hex { opacity: 0; }
-  .card:hover .card-hex, .card:focus-within .card-hex { opacity: 1; }
-}
-@media (hover: none) {
-  .card .card-hex { opacity: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    scroll-behavior: auto !important;
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
-  }
-}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:#fff;color:#111;font-family:Inter,system-ui,sans-serif;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#fff;z-index:60}
+button{font-family:inherit}
+.fade{animation:f .5s ease both}
+@keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.mo{animation:m .25s ease both}
+@keyframes m{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+
+.sw{position:absolute;width:56px;height:56px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.08);rotate:var(--r,0deg);animation:float 7s ease-in-out infinite}
+@keyframes float{50%{translate:0 -10px}}
+.sk{background:linear-gradient(100deg,#F1F1F1 30%,#F8F8F8 50%,#F1F1F1 70%);background-size:200% 100%;animation:sh 1.4s ease-in-out infinite}
+@keyframes sh{to{background-position:-200% 0}}
+:focus-visible{outline:2px solid #111;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.sw,.sk,.fade,.mo{animation:none}html{scroll-behavior:auto}}
+.sk-t>*{visibility:hidden}

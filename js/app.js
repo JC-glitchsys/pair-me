@@ -1,273 +1,50 @@
-import "../css/style.css";
-import { FONT_PAIRS, HUE_FAMILIES, INITIAL_PALETTE_COUNT } from "./data.js";
-import { createPaletteColors, paletteSignature } from "./color.js";
-import { loadSavedPalettes, savePalettes } from "./storage.js";
-import { $, showToast, copyText, renderFilters, renderGrid, openPaletteModal, closeModal } from "./ui.js";
-
-const state = {
-  count: 3,
-  pastel: false,
-  tab: "home",
-  query: "",
-  palettes: [],
-  saved: loadSavedPalettes(),
-  animate: true,
-};
-
-let activePalette = null;
-let modalReturnFocus = null;
-let searchFrame = 0;
-
-const randomItem = (items) => items[Math.floor(Math.random() * items.length)];
-const randomBetween = (min, max) => min + Math.random() * (max - min);
-const makePalette = (lockedColors = [], lockedFlags = []) => {
-  const { colors, locks } = createPaletteColors(state.count, state.pastel, lockedColors, lockedFlags);
-  const family = randomItem(HUE_FAMILIES);
-  return {
-    id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-    name: randomItem(family.names),
-    colors,
-    locks,
-    fontIndex: Math.floor(Math.random() * FONT_PAIRS.length),
-    height: Math.round(randomBetween(175, 290)),
-  };
-};
-
-const isSaved = (palette) => state.saved.some((item) => paletteSignature(item) === paletteSignature(palette));
-
-function persistSaved() {
-  if (!savePalettes(state.saved)) showToast("Storage is full — unable to save");
-}
-
-function render() {
-  renderFilters(state);
-  $("filters").classList.toggle("hidden", state.tab !== "home");
-  $("tabSaved").setAttribute("aria-pressed", String(state.tab === "saved"));
-  $("tabSaved").classList.toggle("bg-[#EFEFEF]", state.tab === "saved");
-  $("tabSaved").classList.toggle("bg-white", state.tab !== "saved");
-
-  const source = state.tab === "home" ? state.palettes : state.saved;
-  const query = state.query.trim().toLowerCase().replaceAll("#", "");
-  const visible = source.filter((palette) => {
-    if (!query) return true;
-    const searchable = [palette.name, ...palette.colors, ...FONT_PAIRS[palette.fontIndex]].join(" ").toLowerCase().replaceAll("#", "");
-    return searchable.includes(query);
-  });
-
-  renderGrid(state, visible, isSaved);
-  $("empty").classList.toggle("hidden", visible.length > 0);
-  $("empty").textContent = state.tab === "saved"
-    ? "No saved palettes match your search."
-    : "No palettes match your search.";
-  state.animate = false;
-}
-
-function generate(carryLocked = false) {
-  const locked = carryLocked
-    ? state.palettes.flatMap((palette) => palette.colors.filter((_, index) => palette.locks[index])).slice(0, state.count)
-    : [];
-  const flags = locked.map(() => true);
-  state.palettes = Array.from({ length: INITIAL_PALETTE_COUNT }, () => makePalette(locked, flags));
-  state.animate = true;
-  render();
-}
-
-function toggleSave(palette) {
-  const signature = paletteSignature(palette);
-  const existingIndex = state.saved.findIndex((item) => paletteSignature(item) === signature);
-  if (existingIndex >= 0) {
-    state.saved.splice(existingIndex, 1);
-    showToast("Removed from Saved");
-  } else {
-    state.saved.unshift(structuredClone(palette));
-    showToast("Palette saved");
-  }
-  persistSaved();
-  render();
-}
-
-function syncSavedPalette(palette) {
-  const index = state.saved.findIndex((item) => item.id === palette.id);
-  if (index >= 0) {
-    state.saved[index] = structuredClone(palette);
-    persistSaved();
-  }
-}
-
-function openDetails(palette, trigger) {
-  activePalette = palette;
-  modalReturnFocus = trigger;
-  openPaletteModal(palette, {
-    isSaved,
-    onClose: () => closeModal(modalReturnFocus),
-    onChange: syncSavedPalette,
-    onSave: toggleSave,
-    onRegenerate: regeneratePalette,
-    onDownload: downloadPalette,
-    onCopy: copyText,
-  });
-}
-
-function regeneratePalette(palette) {
-  const { colors, locks } = createPaletteColors(
-    palette.colors.length,
-    state.pastel,
-    palette.colors,
-    palette.locks,
-  );
-  palette.colors = colors;
-  palette.locks = locks;
-  syncSavedPalette(palette);
-  activePalette = palette;
-  openDetails(palette, modalReturnFocus);
-  render();
-}
-
-function createSvgFallback(color, index) {
-  const safe = color.replace("#", "%23");
-  const second = ["#F6D7E3", "#DDE7F2", "#DDEBDD", "#F5E5D2"][index % 4];
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560"><defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="${safe}"/><stop offset="1" stop-color="${second}"/></linearGradient></defs><rect width="800" height="560" fill="url(%23g)"/><circle cx="220" cy="180" r="130" fill="#fff" opacity=".35"/><path d="M0 430 Q200 300 400 430 T800 430 V560 H0Z" fill="#fff" opacity=".3"/></svg>`;
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-}
-
-async function downloadPalette(palette) {
-  const [headingFont, bodyFont] = FONT_PAIRS[palette.fontIndex];
-  try {
-    await Promise.all([
-      document.fonts.load(`600 48px "${headingFont}"`),
-      document.fonts.load(`400 26px "${bodyFont}"`),
-    ]);
-  } catch { /* Use browser fallback fonts if Google Fonts are unavailable. */ }
-
-  const canvas = document.createElement("canvas");
-  canvas.width = 1200;
-  canvas.height = 800;
-  const context = canvas.getContext("2d");
-  context.fillStyle = "#fff";
-  context.fillRect(0, 0, canvas.width, canvas.height);
-
-  const x = 48, y = 48, width = 1104, height = 400;
-  const blockWidth = width / palette.colors.length;
-  palette.colors.forEach((color, index) => {
-    context.fillStyle = color;
-    context.fillRect(x + index * blockWidth, y, blockWidth + 1, height);
-    context.fillStyle = "rgba(0,0,0,.72)";
-    context.font = "600 24px Inter, sans-serif";
-    context.fillText(color, x + index * blockWidth + 18, y + height - 24);
-  });
-
-  context.fillStyle = "#111";
-  context.font = "700 34px Inter, sans-serif";
-  context.fillText(palette.name, 56, 520);
-  context.font = `600 56px "${headingFont}", serif`;
-  context.fillText("Hello, This is Your Heading", 56, 610);
-  context.fillStyle = "#444";
-  context.font = `400 28px "${bodyFont}", sans-serif`;
-  context.fillText("This is your body text with this palette.", 56, 665);
-  context.fillStyle = "#767676";
-  context.font = "400 22px Inter, sans-serif";
-  context.fillText(`${headingFont} + ${bodyFont}`, 56, 730);
-
-  const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
-  if (!blob) {
-    showToast("Could not create image");
-    return;
-  }
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = `pair-me-${palette.name.toLowerCase().replace(/\s+/g, "-")}.png`;
-  document.body.append(anchor);
-  anchor.click();
-  anchor.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-  showToast("Palette image downloaded");
-}
-
-function trapModalFocus(event) {
-  if (event.key !== "Tab" || $("modal").classList.contains("hidden")) return;
-  const focusable = [...$("modal").querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), [tabindex="0"]')];
-  if (!focusable.length) return;
-  const first = focusable[0];
-  const last = focusable[focusable.length - 1];
-  if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault();
-    last.focus();
-  } else if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault();
-    first.focus();
-  }
-}
-
-$("grid").addEventListener("click", (event) => {
-  const saveButton = event.target.closest("[data-save]");
-  if (saveButton) {
-    const palette = [...state.palettes, ...state.saved].find((item) => item.id === saveButton.dataset.save);
-    if (palette) toggleSave(palette);
-    return;
-  }
-  const openButton = event.target.closest("[data-open]");
-  if (openButton) {
-    const palette = [...state.palettes, ...state.saved].find((item) => item.id === openButton.dataset.open);
-    if (palette) openDetails(palette, openButton);
-  }
-});
-
-$("grid").addEventListener("keydown", (event) => {
-  if ((event.key === "Enter" || event.key === " ") && event.target.matches("[data-open]")) {
-    event.preventDefault();
-    const palette = [...state.palettes, ...state.saved].find((item) => item.id === event.target.dataset.open);
-    if (palette) openDetails(palette, event.target);
-  }
-});
-
-$("filters").addEventListener("click", (event) => {
-  const button = event.target.closest("[data-filter]");
-  if (!button) return;
-  if (button.dataset.filter === "count") {
-    state.count = Number(button.dataset.value);
-    generate();
-  } else if (button.dataset.filter === "pastel") {
-    state.pastel = !state.pastel;
-    generate();
-  } else if (button.dataset.filter === "fonts") {
-    state.palettes.forEach((palette) => { palette.fontIndex = Math.floor(Math.random() * FONT_PAIRS.length); });
-    render();
-  }
-});
-
-$("gen").addEventListener("click", () => {
-  state.tab = "home";
-  generate(true);
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
-$("tabSaved").addEventListener("click", () => {
-  state.tab = state.tab === "saved" ? "home" : "saved";
-  render();
-});
-$("logo").addEventListener("click", () => {
-  state.tab = "home";
-  state.query = "";
-  $("q").value = "";
-  render();
-});
-$("q").addEventListener("input", (event) => {
-  state.query = event.target.value;
-  cancelAnimationFrame(searchFrame);
-  searchFrame = requestAnimationFrame(render);
-});
-$("modal").addEventListener("click", (event) => {
-  if (event.target === $("modal")) closeModal(modalReturnFocus);
-});
-$("pv").addEventListener("click", (event) => {
-  if (event.target === $("pv") || event.target.id === "pvx") $("pv").classList.add("hidden");
-});
-document.addEventListener("keydown", (event) => {
-  trapModalFocus(event);
-  if (event.key === "Escape") {
-    if (!$("pv").classList.contains("hidden")) $("pv").classList.add("hidden");
-    else if (!$("modal").classList.contains("hidden")) closeModal(modalReturnFocus);
-  }
-});
-
-generate();
+// Entry: hero, filters, grid rendering, search, startup
+import { $, P, copy } from "./util.js";
+import { S, isSaved, find, toggleSave, fromHash } from "./storage.js";
+import { FP } from "./data.js";
+import { CURATED, CATEGORIES } from "./palettes.js";
+import { mk } from "./palette.js";
+import { openM } from "./modal.js";
+export function gen(carry){const L=carry?[...new Set([...S.pals,...S.saved,S.work].filter(Boolean).flatMap(p=>p.c.filter((_,i)=>p.l[i])))].slice(0,S.count):[];S.pals=Array.from({length:12},()=>mk(L));render(true)}
+const pill=(a,v,t,on)=>`<button data-${a}="${v}" aria-pressed="${on}" class="shrink-0 h-11 px-4 rounded-full text-sm font-semibold transition ${on?"bg-black text-white":"bg-[#EFEFEF] text-black hover:bg-[#e2e2e2]"}">${t}</button>`;
+function pills(){const r1=[["curated","Curated"],["generated","Generated"]].map(([v,t])=>pill("src",v,t,S.src==v)).join("")+'<span class="w-px bg-[#EFEFEF] mx-1 shrink-0"></span>'+[["newest","Newest"],["az","A-Z"],["shuffle","Shuffle"]].map(([v,t])=>pill("sort",v,t,S.sort==v&&v!="shuffle")).join("");
+ const r2=S.src=="curated"?["All",...CATEGORIES].map(c=>pill("cat",c,c,S.cat==c)).join(""):[2,3,4,5].map(n=>pill("count",n,n+" Colors",S.count==n)).join("")+pill("pastel",1,"Pastel",S.pastel)+pill("fonts",1,"Shuffle Fonts",false);
+ $("filters").innerHTML=`<div class="flex gap-2 overflow-x-auto">${r1}</div><div class="flex gap-2 overflow-x-auto">${r2}</div>`}
+const card=(p,i,anim)=>{const on=isSaved(p);return`<div class="card group relative mb-4 break-inside-avoid rounded-2xl overflow-hidden cursor-pointer bg-white ${anim?"fade":""}" style="animation-delay:${Math.min(i,12)*40}ms" data-id="${p.id}" data-cat="${p.category}" data-s="${[p.name,p.category,p.fonts.join(" "),p.c.join(" "),p.c.map(x=>x.slice(1)).join(" ")].join(" ").toLowerCase()}" role="button" tabindex="0" aria-label="Open palette ${p.name}">
+ <div class="relative flex flex-col" style="height:${p.h}px">${p.c.map(c=>`<div class="flex-1 flex items-end px-3 pb-2" style="background:${c}"><span data-hex="${c}" class="py-2 text-[11px] font-medium text-black/70 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100 transition">${c}</span></div>`).join("")}
+ <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition pointer-events-none"></div>
+ <button data-save="${p.id}" aria-label="${on?"Unsave":"Save"} ${p.name}" class="absolute top-3 right-3 h-11 px-4 rounded-full text-sm font-semibold text-white ${on?"bg-black":"bg-[#E60023] hover:bg-[#ad081b]"} opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100 [@media(hover:none)]:opacity-100 transition">${on?"Saved":"Save"}</button></div>
+ <div class="px-1 pt-2 pb-1"><div class="flex justify-between gap-2"><div class="font-bold text-sm">${p.name}</div><div class="text-[11px] text-neutral-400 whitespace-nowrap">${p.category}</div></div><div class="text-xs text-neutral-500">${p.fonts.join(" + ")}</div></div></div>`};
+// Full render: only when the list itself changes (source, sort, count, tab). Search and category only toggle visibility.
+export function render(anim){pills();const home=S.tab=="home";$("filters").style.display=home?"flex":"none";$("hero").style.display=home?"":"none";$("tabSaved").style.background=home?"":"#EFEFEF";
+ const list=[...(home?(S.src=="curated"?CURATED:S.pals):S.saved)];
+ if(S.sort=="az")list.sort((a,b)=>a.name.localeCompare(b.name));else if(S.sort=="shuffle")list.sort(()=>Math.random()-.5);else if(home)list.sort((a,b)=>b.n-a.n);
+ const t=document.createElement("template");t.innerHTML=list.map((p,i)=>card(p,i,anim)).join("");$("grid").replaceChildren(t.content);applyFilter()}
+function applyFilter(){const q=S.q.trim().toLowerCase().replace(/^#/,""),cur=S.tab=="home"&&S.src=="curated";let n=0;
+ for(const c of $("grid").children){const ok=(!q||c.dataset.s.includes(q))&&(!cur||S.cat=="All"||c.dataset.cat==S.cat);c.hidden=!ok;if(ok)n++}
+ const none=S.tab=="saved"&&!S.saved.length;$("empty").classList.toggle("hidden",n>0);
+ $("emptyT").textContent=none?"No saved palettes yet":"No palettes found";$("emptyP").textContent=none?"Save a palette and it will show up here.":"Try a different search or clear your filters.";
+ $("emptyB").textContent=none?"Browse palettes":"Clear filters";$("emptyB").dataset.a=none?"browse":"clear"}
+const toGrid=()=>$("filters").scrollIntoView({behavior:"smooth"});
+function paint(b,p){const on=isSaved(p);b.textContent=on?"Saved":"Save";b.setAttribute("aria-label",(on?"Unsave ":"Save ")+p.name);b.classList.toggle("bg-black",on);b.classList.toggle("bg-[#E60023]",!on);b.classList.toggle("hover:bg-[#ad081b]",!on)}
+$("grid").onclick=e=>{const hx=e.target.closest("[data-hex]");if(hx){copy(hx.dataset.hex);return}const sb=e.target.closest("[data-save]");if(sb){const p=find(sb.dataset.save);toggleSave(p);S.tab=="saved"?render():paint(sb,p);return}const c=e.target.closest(".card");if(c)openM(find(c.dataset.id))};
+$("grid").onkeydown=e=>{if((e.key=="Enter"||e.key==" ")&&e.target.classList.contains("card")){e.preventDefault();openM(find(e.target.dataset.id))}};
+$("filters").onclick=e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
+ if(d.src){S.src=d.src;S.src=="generated"&&!S.pals.length?gen():render(true)}
+ else if(d.cat){S.cat=d.cat;pills();applyFilter()}
+ else if(d.sort){S.sort=d.sort;render(true)}
+ else if(d.count){S.count=+d.count;gen()}
+ else if(d.pastel){S.pastel=!S.pastel;gen()}
+ else if(d.fonts){S.pals.forEach(p=>p.fonts=P(FP));render(true)}};
+$("gen").onclick=()=>{S.tab="home";S.src="generated";gen(true);toGrid()};
+$("heroGen").onclick=()=>$("gen").click();
+$("heroExplore").onclick=toGrid;
+$("tabSaved").onclick=()=>{S.tab=S.tab=="saved"?"home":"saved";render(true)};
+$("logo").onclick=()=>{S.tab="home";render(true)};
+$("emptyB").onclick=()=>{if($("emptyB").dataset.a=="browse"){S.tab="home";render(true)}else{S.q="";S.cat="All";$("q").value="";pills();applyFilter()}};
+let tm;$("q").oninput=e=>{clearTimeout(tm);tm=setTimeout(()=>{S.q=e.target.value;applyFilter()},250)};
+window.addEventListener("hashchange",()=>{const sp=fromHash();if(sp)openM(sp)});
+$("sTog").onclick=()=>{const o=$("sWrap").classList.toggle("hidden");$("sTog").setAttribute("aria-expanded",String(!o));if(!o)$("q").focus()};
+$("hero").hidden=false;$("hero").classList.add("fade");$("heroSk").remove();
+render(true);
+{const sp=fromHash();if(sp)openM(sp)}

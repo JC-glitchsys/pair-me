@@ -1,54 +1,21 @@
 # Pair Me
 
-A minimal, Pinterest-inspired color palette generator with Google Font pairings, palette saving, and downloadable palette previews.
+Pinterest-inspired color palette and font pairing studio. Vite, Tailwind CSS 3.4.17, vanilla ES modules.
 
-## Features
+## Setup
+    npm install
+    npm run dev       # http://localhost:5173/pair-me/
+    npm run build     # output in dist/
+    npm run preview
 
-- Generate harmonious palettes with 2, 3, 4, or 5 colors
-- Optional pastel palette mode and locked colors
-- Search palettes, HEX values, and font pairings
-- Unsplash photography with generated SVG fallbacks
-- Tap-friendly HEX copying on mobile
-- Keyboard-accessible palette cards and modal interactions
-- Save and remove palettes with toast feedback
-- Duplicate saved-palette prevention
-- Download palette previews as PNG
-- Saved palettes persist in local storage
+## Environment variables (optional)
+Copy `.env.example` to `.env` and set `VITE_UNSPLASH_KEY` to your Unsplash Access Key to search photos by palette name and category. Without it, photos come from the ID lists in `js/images.js`. Never commit `.env`; the key ends up in the built JS, so use only the public Access Key, never the Secret Key.
 
-## Run locally
+## Deploy (GitHub Pages)
+`vite.config.js` sets `base: "/pair-me/"` (the repository name). Push to `main`; `.github/workflows/deploy.yml` builds and deploys. In repo Settings > Pages, set Source to GitHub Actions. If you rename the repo, change `base`.
 
-Requires Node.js 20 or newer.
+## Add palettes
+Append a row to `ROWS` in `js/palettes.js`: `["Name", "Category", "HEX,HEX,HEX", "Heading font", "Body font"]`. IDs come from row position, so never reorder or delete rows (saved palettes use the ID). The console warns about invalid HEX, duplicates, or unknown categories. New fonts must also be added to the Google Fonts link in `index.html`.
 
-```bash
-npm install
-npm run dev
-```
-
-## Production build
-
-```bash
-npm run build
-npm run preview
-```
-
-The production site is generated in `dist/`.
-
-## GitHub Pages deployment
-
-This repository is configured for the project URL `/pair-me/` in `vite.config.js`.
-
-1. Push the project to the `main` branch.
-2. In GitHub, open **Settings → Pages**.
-3. Set **Build and deployment → Source** to **GitHub Actions**.
-4. The workflow at `.github/workflows/deploy.yml` builds the Vite project and deploys the `dist/` directory.
-
-Do not upload the source files as the published site. GitHub Actions must deploy the generated `dist/` output.
-
-## Tech stack
-
-- HTML, CSS, and JavaScript ES modules
-- Vite
-- Tailwind CSS 3.4
-- Google Fonts
-- Unsplash Source images with local SVG data fallbacks
-- Browser Local Storage and Canvas API
+## Structure
+`js/data.js` fonts and hues, `palettes.js` curated data, `palette.js` generation, `images.js` photos, `storage.js` state, saved (key `pairme_saved_v2`, migrates old `pm_saved`) and share links, `modal.js`, `export.js` (PNG), `app.js` grid, filters, search.

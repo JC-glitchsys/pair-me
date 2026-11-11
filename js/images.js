@@ -1,36 +1,16 @@
-import { colorFamilyName } from "./color.js";
-
-// Curated Unsplash-hosted photography. No API key is required for these image URLs.
-const UNSPLASH_PHOTOS = [
-  { id: "photo-1490750967868-88aa4486c946", family: "rose", fallback: "#E9B9C8" },
-  { id: "photo-1494438639946-1ebd1d20bf85", family: "peach", fallback: "#F2D3B8" },
-  { id: "photo-1513519245088-0e12902e5a38", family: "yellow", fallback: "#F2E6B8" },
-  { id: "photo-1500530855697-b586d89ba3ee", family: "green", fallback: "#C9DDC9" },
-  { id: "photo-1497366754035-f200968a6e72", family: "blue", fallback: "#C8DDED" },
-  { id: "photo-1515886657613-9f3515b0c78f", family: "indigo", fallback: "#C9C8E8" },
-  { id: "photo-1490481651871-ab68de25d43d", family: "lavender", fallback: "#DCCCEB" },
-  { id: "photo-1518837695005-2083093ee35b", family: "pink", fallback: "#E9C7D5" },
-  { id: "photo-1470252649378-9c29740c9fa8", family: "green", fallback: "#D1DFC9" },
-  { id: "photo-1490730141103-6cac27aaab94", family: "peach", fallback: "#EED7C4" },
-];
-
-function svgFallback(color, secondary) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560"><defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="${color}"/><stop offset="1" stop-color="${secondary}"/></linearGradient></defs><rect width="800" height="560" fill="url(#g)"/><circle cx="220" cy="180" r="130" fill="#fff" opacity=".35"/><path d="M0 430 Q200 300 400 430 T800 430 V560 H0Z" fill="#fff" opacity=".3"/></svg>`;
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-}
-
-export function getUnsplashPhotos(colors, count = 6) {
-  const families = [...new Set(colors.map(colorFamilyName))];
-  const ordered = [
-    ...UNSPLASH_PHOTOS.filter((photo) => families.includes(photo.family)),
-    ...UNSPLASH_PHOTOS.filter((photo) => !families.includes(photo.family)),
-  ];
-  return Array.from({ length: count }, (_, index) => {
-    const photo = ordered[index % ordered.length];
-    return {
-      src: `https://images.unsplash.com/${photo.id}?auto=format&fit=crop&w=900&q=82`,
-      fallback: svgFallback(photo.fallback, "#F8F5F2"),
-      alt: `Unsplash photograph in a ${photo.family} color mood`,
-    };
-  });
-}
+// Photo inspiration. Direct images.unsplash.com URLs (source.unsplash.com is dead and not used).
+// Optional: set VITE_UNSPLASH_KEY (Unsplash Access Key) to search by palette name + category via the official API.
+import { scene } from "./palette.js";
+const KEY=import.meta.env?.VITE_UNSPLASH_KEY;
+const U=id=>`https://images.unsplash.com/photo-${id}?q=80&w=800&auto=format&fit=crop`;
+const SEA=["1507525428034-b723cf961d3e","1518837695005-2083093ee35b","1475924156734-496f6cac6ec1"];
+const LAND=["1441974231531-c6227db76b6e","1470071459604-3b5ec3a7fe05","1506744038136-46273834b3fb"];
+const POOL={Coastal:SEA,Earthy:LAND,Vintage:LAND,Neutral:LAND,all:["1469474968028-56623f02e42e","1519681393784-d120267933ba","1500530855697-b586d89ba3ee","1501785888041-af3ef285b470"]};
+const cache=new Map(); // palette id -> [{u, fb}]
+export async function getPhotos(p){
+ if(cache.has(p.id))return cache.get(p.id);
+ let urls=[];
+ if(KEY){try{const r=await fetch("https://api.unsplash.com/search/photos?per_page=4&orientation=portrait&query="+encodeURIComponent(p.name+" "+p.category),{headers:{Authorization:"Client-ID "+KEY}});urls=((await r.json()).results||[]).map(x=>x.urls.regular)}catch(e){}}
+ const ids=[...new Set([...(POOL[p.category]||[]),...POOL.all])],o=[...p.id].reduce((a,ch)=>a+ch.charCodeAt(0),0);
+ for(let k=urls.length;k<4;k++)urls.push(U(ids[(o+k)%ids.length]));
+ const out=urls.slice(0,4).map((u,k)=>({u,fb:scene(p.c,k)}));cache.set(p.id,out);return out}

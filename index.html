@@ -1,37 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="description" content="Discover harmonious color palettes and beautiful Google Font pairings with Pair Me.">
-  <title>Pair Me — Color Palette Generator</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://images.unsplash.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600&family=Lora:wght@400;600&family=Poppins:wght@400;600&family=Montserrat:wght@400;600&family=DM+Serif+Display&family=DM+Sans:wght@400;600&family=Space+Grotesk:wght@400;600&family=Work+Sans:wght@400;600&family=Fraunces:wght@400;600&family=Nunito:wght@400;600&family=Cormorant+Garamond:wght@400;600&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
-</head>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pair Me</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600&family=Lora:wght@400;600&family=Poppins:wght@400;600&family=Montserrat:wght@400;600&family=DM+Serif+Display&family=DM+Sans:wght@400;600&family=Space+Grotesk:wght@400;600&family=Work+Sans:wght@400;600&family=Fraunces:wght@400;600&family=Nunito:wght@400;600&family=Cormorant+Garamond:wght@400;600&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"></head>
 <body>
-  <header class="sticky top-0 z-50 bg-white" style="padding-top:env(safe-area-inset-top,0px)">
-    <div class="flex h-16 items-center gap-2 px-3 sm:gap-4 sm:px-5">
-      <button id="logo" type="button" class="whitespace-nowrap text-xl font-bold tracking-tight text-black" aria-label="Pair Me home">Pair Me</button>
-      <label class="sr-only" for="q">Search palettes, colors, and fonts</label>
-      <input id="q" type="search" autocomplete="off" placeholder="Search colors, fonts, palettes" class="h-12 min-w-0 flex-1 rounded-full bg-[#EFEFEF] px-5 text-sm outline-none focus-visible:ring-2 focus-visible:ring-black/30">
-      <button id="tabSaved" type="button" aria-pressed="false" class="rounded-full px-2 py-2 text-sm font-semibold transition hover:bg-[#EFEFEF] sm:px-3">Saved</button>
-      <button id="gen" type="button" class="h-10 rounded-full bg-black px-4 text-sm font-semibold text-white transition hover:bg-neutral-800">Generate</button>
-    </div>
-    <nav id="filters" aria-label="Palette filters" class="flex gap-2 overflow-x-auto px-3 pb-3 sm:px-5"></nav>
-  </header>
-
-  <main>
-    <section id="grid" aria-label="Color palettes" aria-live="polite" class="columns-2 px-3 pb-10 pt-2 sm:px-5 md:columns-4" style="column-gap:16px"></section>
-    <p id="empty" class="hidden py-24 text-center text-sm text-neutral-500" role="status">Nothing here yet.</p>
-  </main>
-
-  <div id="modal" class="hidden fixed inset-0 z-[70] overflow-y-auto bg-black/50 p-3 sm:p-6" style="padding-top:max(12px,env(safe-area-inset-top,0px))"></div>
-  <div id="pv" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 p-4"></div>
-  <div id="toast" class="pointer-events-none fixed bottom-6 left-1/2 z-[90] -translate-x-1/2 rounded-full bg-black px-4 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity" role="status" aria-live="polite"></div>
-
-  <script type="module" src="/js/app.js"></script>
-</body>
-</html>
+<a href="#grid" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-black focus:text-white focus:px-4 focus:py-2 focus:rounded-full">Skip to palettes</a>
+<header class="sticky z-50 bg-white" style="top:env(safe-area-inset-top,0px)">
+ <div class="flex flex-wrap items-center gap-x-2 sm:gap-x-4 px-3 sm:px-5 py-2 min-h-[64px]">
+  <button id="logo" class="font-bold text-xl tracking-tight text-black whitespace-nowrap min-h-[44px]">Pair Me</button>
+  <div id="sWrap" class="hidden sm:block sm:flex-1 min-w-0 w-full sm:w-auto order-last sm:order-none pb-1 sm:pb-0"><input id="q" type="text" aria-label="Search palettes" placeholder="Search colors, fonts, palettes" class="w-full h-12 rounded-full bg-[#EFEFEF] px-5 text-sm outline-none focus:ring-2 focus:ring-black/20"></div>
+  <span class="flex-1 sm:hidden"></span>
+  <button id="sTog" aria-label="Search" aria-expanded="false" aria-controls="sWrap" class="sm:hidden w-11 h-11 rounded-full hover:bg-[#EFEFEF] flex items-center justify-center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+  <nav aria-label="Main" class="flex items-center gap-2"><button id="tabSaved" class="text-sm font-semibold px-3 min-h-[44px] rounded-full hover:bg-[#EFEFEF] transition">Saved</button><button id="gen" class="h-11 px-5 rounded-full bg-black text-white text-sm font-semibold hover:bg-neutral-800 transition">Generate</button></nav>
+ </div>
+</header>
+<main>
+<section id="heroSk" aria-hidden="true" class="px-4 pt-12 pb-14 sm:pt-20 sm:pb-24"><div class="max-w-3xl mx-auto flex flex-col items-center gap-4"><div class="sk h-3 w-44 rounded-full"></div><div class="sk h-11 sm:h-16 w-full max-w-xl rounded-2xl"></div><div class="sk h-11 sm:h-16 w-3/4 max-w-md rounded-2xl"></div><div class="sk h-4 w-full max-w-md rounded-full mt-2"></div><div class="flex gap-3 mt-4"><div class="sk h-12 w-36 rounded-full"></div><div class="sk h-12 w-40 rounded-full"></div></div></div></section>
+<section id="hero" hidden class="relative overflow-hidden px-4 sm:px-8 pt-12 pb-14 sm:pt-20 sm:pb-24">
+ <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+  <span class="sw" style="top:14%;left:6%;background:#FFC8DD;--r:-8deg"></span>
+  <span class="sw hidden sm:block" style="top:62%;left:12%;width:40px;height:40px;background:#BDE0FE;--r:10deg;animation-delay:-2s"></span>
+  <span class="sw" style="top:10%;right:7%;width:44px;height:44px;background:#D8F3DC;--r:12deg;animation-delay:-4s"></span>
+  <span class="sw hidden sm:block" style="top:58%;right:9%;width:64px;height:64px;background:#E4D4F4;--r:-10deg;animation-delay:-1s"></span>
+  <span class="sw hidden lg:block" style="top:34%;right:22%;width:34px;height:34px;background:#FFF1B6;--r:6deg;animation-delay:-3s"></span>
+ </div>
+ <div class="relative max-w-3xl mx-auto text-center">
+  <p class="text-xs font-semibold tracking-[.18em] text-neutral-500">COLOR INSPIRATION STUDIO</p>
+  <h1 class="mt-4 font-bold tracking-tight text-[40px] leading-[1.05] sm:text-6xl lg:text-7xl">Find your perfect color pairing.</h1>
+  <p class="mt-5 text-base sm:text-lg text-neutral-600 max-w-xl mx-auto">Discover beautiful palettes, explore typography, and create something that feels like you.</p>
+  <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+   <button id="heroExplore" class="h-12 px-7 rounded-full bg-black text-white text-sm font-semibold hover:bg-neutral-800 transition">Explore Palettes</button>
+   <button id="heroGen" class="h-12 px-7 rounded-full bg-[#EFEFEF] text-black text-sm font-semibold hover:bg-[#e2e2e2] transition">Generate a Palette</button>
+  </div>
+ </div>
+</section>
+<div id="filters" class="flex flex-col gap-2 px-3 sm:px-5 pb-3" style="scroll-margin-top:80px"></div>
+<section id="grid" aria-label="Palettes" class="columns-2 sm:columns-3 lg:columns-4 px-3 sm:px-5 pb-10 pt-2" style="column-gap:16px"><div class="sk rounded-2xl mb-4 break-inside-avoid" aria-hidden="true" style="height:220px"></div><div class="sk rounded-2xl mb-4 break-inside-avoid" aria-hidden="true" style="height:170px"></div><div class="sk rounded-2xl mb-4 break-inside-avoid" aria-hidden="true" style="height:260px"></div><div class="sk rounded-2xl mb-4 break-inside-avoid" aria-hidden="true" style="height:190px"></div><div class="sk rounded-2xl mb-4 break-inside-avoid" aria-hidden="true" style="height:240px"></div><div class="sk rounded-2xl mb-4 break-inside-avoid" aria-hidden="true" style="height:200px"></div></section>
+<div id="empty" class="hidden text-center py-24 px-4"><h2 id="emptyT" class="font-bold text-xl">No palettes found</h2><p id="emptyP" class="mt-2 text-sm text-neutral-500"></p><button id="emptyB" class="mt-5 h-11 px-6 rounded-full bg-black text-white text-sm font-semibold">Clear filters</button></div>
+</main>
+<div id="modal" class="hidden flex fixed inset-0 z-[70] bg-black/50 sm:p-6 overflow-y-auto"></div>
+<div id="pv" class="hidden fixed inset-0 z-[80] bg-black/60 p-4 flex items-center justify-center"></div>
+<div id="toast" role="status" aria-live="polite" class="fixed left-1/2 -translate-x-1/2 bottom-6 z-[90] bg-black text-white text-sm px-4 py-2 rounded-full opacity-0 pointer-events-none transition-opacity"></div>
+<script type="module" src="js/app.js"></script></body></html>

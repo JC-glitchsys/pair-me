@@ -19,3 +19,6 @@ Append a row to `ROWS` in `js/palettes.js`: `["Name", "Category", "HEX,HEX,HEX",
 
 ## Structure
 `js/data.js` fonts and hues, `palettes.js` curated data, `palette.js` generation, `images.js` photos, `storage.js` state, saved (key `pairme_saved_v2`, migrates old `pm_saved`) and share links, `modal.js`, `export.js` (PNG), `app.js` grid, filters, search.
+
+## Categories and moods
+Categories are listed in `CATEGORIES` in `js/palettes.js` (add a name there, then use it in a row). Moods are computed from the colors in `js/mood.js` (edit the rules or the `MOODS` list there), so every palette, curated or generated, gets them automatically.

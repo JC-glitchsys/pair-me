@@ -2,14 +2,15 @@
 import { R, P } from "./util.js";
 import { S } from "./storage.js";
 import { FAM, FP } from "./data.js";
+import { moodsOf } from "./mood.js";
 export function hex(h,s,l){h=((h%360)+360)%360;s/=100;l/=100;const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12;return Math.round(255*(l-a*Math.max(-1,Math.min(k-3,9-k,1)))).toString(16).padStart(2,"0")};return("#"+f(0)+f(8)+f(4)).toUpperCase()}
 export const dh=(a,b)=>{const d=Math.abs(a-b)%360;return Math.min(d,360-d)};
 const light=x=>{const v=[1,3,5].map(i=>parseInt(x.slice(i,i+2),16));return(Math.max(...v)+Math.min(...v))/510};
 function pick(hs,h0){let h,t=0;do{h=(h0??P(FAM).h)+R(-8,8);t++}while(t<25&&hs.some(x=>dh(x,h)<25));return hex(h,R(55,85),S.pastel?R(88,94):R(80,90))}
 export function nameOf(c){const d=c.reduce((a,b)=>light(b)<light(a)?b:a),h=hue(d);return P(FAM.reduce((a,b)=>dh(b.h,h)<dh(a.h,h)?b:a).n)}
 function fill(c,l,h0){const hs=c.filter((_,i)=>l[i]).map(hue);return c.map((x,i)=>{if(l[i])return x;const n=pick(hs,i==0?h0:undefined);hs.push(hue(n));return n})}
-export function mk(L=[]){const l=Array.from({length:S.count},(_,i)=>!!L[i]),c=fill(l.map((x,i)=>x?L[i]:""),l,P(FAM).h);return{id:Math.random().toString(36).slice(2),name:nameOf(c),c,l,fonts:P(FP),category:"Pastel",source:"generated",n:performance.now(),h:Math.round(R(170,290))}}
-export function regen(p){p.c=fill(p.c,p.l);p.name=nameOf(p.c);if(p.source=="curated"){p.source="generated";p.id="g"+Math.random().toString(36).slice(2)}} // editing a curated palette makes it a generated one
+export function mk(L=[]){const l=Array.from({length:S.count},(_,i)=>!!L[i]),c=fill(l.map((x,i)=>x?L[i]:""),l,P(FAM).h);return{id:Math.random().toString(36).slice(2),name:nameOf(c),c,l,moods:moodsOf(c),fonts:P(FP),category:"Pastel",source:"generated",n:performance.now(),h:Math.round(R(170,290))}}
+export function regen(p){p.c=fill(p.c,p.l);p.name=nameOf(p.c);p.moods=moodsOf(p.c);if(p.source=="curated"){p.source="generated";p.id="g"+Math.random().toString(36).slice(2)}} // editing a curated palette makes it a generated one
 export function scene(c,k){const H=[560,440,500,620][k],W=400,r=()=>Math.round(R(0,1)*100)/100,o=i=>c[i%c.length];let b="";
  if(k==0)b=`<circle cx="${R(100,300)}" cy="${R(120,220)}" r="${R(70,110)}" fill="${o(1)}"/><circle cx="${R(100,300)}" cy="${R(320,460)}" r="${R(50,90)}" fill="${o(2)}" opacity=".85"/>`;
  else if(k==1)b=[0,1,2].map(i=>`<path d="M${40+i*110} ${H} V${H-R(160,260)} a50 50 0 0 1 100 0 V${H}z" fill="${o(i+1)}"/>`).join("");

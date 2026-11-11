@@ -1,7 +1,8 @@
 // Curated palettes. To add one, append a row to ROWS: [name, category, "HEX,HEX,HEX", heading font, body font]
 // IDs are generated from the row position (pm-001, pm-002, ...). Never reorder or delete rows if people have saved palettes.
 // Fonts must exist in the Google Fonts link in index.html. Scales to 100+ rows with no other change.
-export const CATEGORIES=["Pastel","Minimalist","Earthy","Vintage","Romantic","Modern","Retro","Luxury","Coastal","Neutral"];
+import { moodsOf } from "./mood.js";
+export const CATEGORIES=["Pastel","Minimalist","Earthy","Vintage","Romantic","Modern","Retro","Luxury","Coastal","Neutral","Dark","Bright","Monochrome","Tropical","Autumn","Spring","Winter","Sunset","Nature","Candy"];
 const ROWS=[
 ["Cotton Candy","Pastel","FFC8DD,FFAFCC,BDE0FE,A2D2FF","Playfair Display","Inter"],
 ["Mint Cream","Pastel","D8F3DC,B7E4C7,FFF1E6","DM Serif Display","DM Sans"],
@@ -32,8 +33,38 @@ const ROWS=[
 ["Harbor Mist","Coastal","E0FBFC,C2DFE3,9DB4C0,5C6B73","Montserrat","Nunito"],
 ["Oat Milk","Neutral","F5EFE6,E5D9C6,CBB89D","Fraunces","Inter"],
 ["Warm Stone","Neutral","EAE0D5,C6AC8F,5E503F","Lora","DM Sans"],
-["Cloud Grey","Neutral","F4F4F2,D9D9D4,A6A59F,6B6A66","Work Sans","Poppins"]
+["Cloud Grey","Neutral","F4F4F2,D9D9D4,A6A59F,6B6A66","Work Sans","Poppins"],
+["Midnight Ink","Dark","0D1B2A,1B263B,415A77,778DA9","Space Grotesk","Inter"],
+["Charcoal Ember","Dark","121212,2B2B2B,E4572E,F3A712","Montserrat","Work Sans"],
+["Deep Forest Night","Dark","0B1D16,15332B,2D6A4F,95D5B2","Fraunces","DM Sans"],
+["Citrus Pop","Bright","FFD60A,FF9F1C,2EC4B6,FDFFFC","Poppins","Nunito"],
+["Electric Lagoon","Bright","00B4D8,0077B6,FFEE32,FF5D8F","Montserrat","Inter"],
+["Fresh Berry","Bright","E63946,F1FAEE,A8DADC,457B9D","Raleway","Work Sans"],
+["Blue Mist","Monochrome","EAF2FB,CADFF5,9DC3EA,5B93D1","Space Grotesk","Inter"],
+["Rose Mono","Monochrome","FFF0F3,FFCCD5,FF8FA3,C9184A","Playfair Display","DM Sans"],
+["Green Mono","Monochrome","EDF7EE,C3E6CB,8FCB9B,3E8E55","Lora","Nunito"],
+["Palm Breeze","Tropical","06D6A0,FFD166,EF476F,118AB2","Poppins","Nunito"],
+["Mango Lagoon","Tropical","FFB703,FB8500,219EBC,023047","Fraunces","Work Sans"],
+["Hibiscus","Tropical","FF6F91,FF9671,FFC75F,008F7A","Raleway","Lora"],
+["Maple Leaf","Autumn","6F1D1B,BB9457,432818,99582A,FFE6A7","Playfair Display","Lora"],
+["Harvest Moon","Autumn","F4A259,BC4B51,8CB369,5B8E7D,F4E285","DM Serif Display","DM Sans"],
+["Pumpkin Spice","Autumn","FFE8D6,FFB703,E85D04,9D0208","Fraunces","Inter"],
+["Cherry Blossom","Spring","FFF0F5,FFD6E8,FFB3D1,B5E48C","Cormorant Garamond","Nunito"],
+["Tulip Field","Spring","FFE5EC,FFB3C6,B7E4C7,FDFFB6","DM Serif Display","Raleway"],
+["Morning Dew","Spring","F1FAEE,CAF0F8,D8F3DC,FEFAE0","Lora","Work Sans"],
+["Frost","Winter","EAF4F4,CCE3DE,A4C3B2,6B9080","Montserrat","Lora"],
+["Snowfall","Winter","FFFFFF,E9ECEF,CED4DA,ADB5BD","Space Grotesk","DM Sans"],
+["Pine and Berry","Winter","1B4332,2D6A4F,FFFFFF,C1121F","Fraunces","Poppins"],
+["Golden Hour","Sunset","FFCDB2,FFB4A2,E5989B,B5838D,6D6875","Playfair Display","Inter"],
+["Dusk Glow","Sunset","FFBA08,F48C06,DC2F02,9D0208,370617","Montserrat","Nunito"],
+["Pink Horizon","Sunset","FFD6A5,FFADAD,CDB4DB,A2D2FF","Raleway","DM Sans"],
+["River Stone","Nature","DAD7CD,A3B18A,588157,3A5A40,344E41","Lora","Work Sans"],
+["Meadow","Nature","CCD5AE,E9EDC9,FEFAE0,FAEDCD,D4A373","Fraunces","Nunito"],
+["Moss and Bark","Nature","4F772D,90A955,ECF39E,31572C","Cormorant Garamond","Poppins"],
+["Bubblegum","Candy","FF99C8,FCF6BD,D0F4DE,A9DEF9,E4C1F9","Poppins","Nunito"],
+["Sugar Rush","Candy","FFADAD,FFD6A5,FDFFB6,CAFFBF,9BF6FF","DM Serif Display","Inter"],
+["Cotton Cloud","Candy","FFCFD2,F1C0E8,CFBAF0,A3C4F3,90DBF4","Raleway","Nunito"]
 ];
-export const CURATED=ROWS.map(([name,category,hx,hf,bf],i)=>{const c=hx.split(",").map(x=>"#"+x.toUpperCase());return{id:"pm-"+String(i+1).padStart(3,"0"),name,c,category,fonts:[hf,bf],source:"curated",l:c.map(()=>false),h:150+(i*53)%130,n:i}});
+export const CURATED=ROWS.map(([name,category,hx,hf,bf],i)=>{const c=hx.split(",").map(x=>"#"+x.toUpperCase());return{id:"pm-"+String(i+1).padStart(3,"0"),name,c,category,fonts:[hf,bf],source:"curated",moods:moodsOf(c),l:c.map(()=>false),h:150+(i*53)%130,n:i}});
 // Sanity check: valid HEX, 3-5 colors, known category, no duplicate id or color combination
 {const ids=new Set(),combos=new Set();for(const p of CURATED){const k=[...p.c].sort().join();if(p.c.length<3||p.c.length>5||p.c.some(x=>!/^#[0-9A-F]{6}$/.test(x))||!CATEGORIES.includes(p.category)||ids.has(p.id)||combos.has(k))console.warn("Check palette:",p.id,p.name);ids.add(p.id);combos.add(k)}}

@@ -27,7 +27,6 @@ pair-me/
 ├── tests/
 │   ├── helpers.js
 │   ├── smoke.spec.js
-│   ├── core-interactions.spec.js
 │   ├── palette-data.spec.js
 │   ├── mood-engine.spec.js
 │   ├── generation.spec.js
@@ -82,3 +81,11 @@ npx playwright test --workers=1
 - The test for `#modal` focus restoration may expose a browser-specific focus timing issue.
 - The modal preview Escape test currently only tests closing the main modal. The source you shared hides the preview and closes the modal on the same Escape press; this pack intentionally does not mark that behavior as correct.
 - `fullyParallel` is enabled. Each Playwright test gets an isolated browser context, so localStorage changes do not leak between tests.
+
+
+## Fix applied after first run
+
+The first report showed two search-related timeouts. The search field is already
+visible in the desktop layout, while `#sTog` is hidden there. Tests now type
+directly into the visible textbox and only click the toggle when it is visible
+on the mobile viewport.

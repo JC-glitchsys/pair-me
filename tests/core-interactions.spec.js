@@ -61,9 +61,10 @@ test("color count controls generate exactly the selected number of swatches", as
 
 test("search filters by a palette name", async ({ page }) => {
   await page.goto("/");
-  await page.locator("#sTog").click();
   const name = (await page.locator("#grid .card").first().locator(".font-bold").first().innerText()).trim();
-  await page.locator("#q").fill(name);
+  // Search is already visible in the desktop layout; don't click the
+  // mobile-only toggle when it is hidden by the responsive CSS.
+  await page.getByRole("textbox", { name: "Search palettes" }).fill(name);
   await waitForSearch(page);
   await expect(page.locator("#grid .card:visible")).toHaveCount(1);
   await expect(page.locator("#grid .card:visible")).toContainText(name);

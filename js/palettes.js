@@ -68,3 +68,4 @@ const ROWS=[
 export const CURATED=ROWS.map(([name,category,hx,hf,bf],i)=>{const c=hx.split(",").map(x=>"#"+x.toUpperCase());return{id:"pm-"+String(i+1).padStart(3,"0"),name,c,category,fonts:[hf,bf],source:"curated",moods:moodsOf(c),l:c.map(()=>false),h:150+(i*53)%130,n:i}});
 // Sanity check: valid HEX, 3-5 colors, known category, no duplicate id or color combination
 {const ids=new Set(),combos=new Set();for(const p of CURATED){const k=[...p.c].sort().join();if(p.c.length<3||p.c.length>5||p.c.some(x=>!/^#[0-9A-F]{6}$/.test(x))||!CATEGORIES.includes(p.category)||ids.has(p.id)||combos.has(k))console.warn("Check palette:",p.id,p.name);ids.add(p.id);combos.add(k)}}
+

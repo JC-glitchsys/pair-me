@@ -1,0 +1,817 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: core-interactions.spec.js >> search filters by a palette name
+- Location: tests\core-interactions.spec.js:62:1
+
+# Error details
+
+```
+Test timeout of 30000ms exceeded.
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Skip to palettes" [ref=e2] [cursor=pointer]:
+    - /url: "#grid"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - button "Pair Me, home" [ref=e5] [cursor=pointer]:
+        - generic [ref=e6]: Pair Me
+      - textbox "Search palettes" [ref=e8]:
+        - /placeholder: Search colors, fonts, palettes
+      - navigation "Main" [ref=e9]:
+        - button "Saved" [ref=e10] [cursor=pointer]
+        - button "Customize generate" [ref=e11] [cursor=pointer]
+        - button "Generate" [ref=e16] [cursor=pointer]
+  - main [ref=e17]:
+    - generic [ref=e19]:
+      - paragraph [ref=e20]: COLOR INSPIRATION STUDIO
+      - heading "Find your perfect color pairing." [level=1] [ref=e21]
+      - paragraph [ref=e22]: Discover beautiful palettes, explore typography, and create something that feels like you.
+      - generic [ref=e23]:
+        - button "Explore Palettes" [ref=e24] [cursor=pointer]
+        - button "Generate a Palette" [ref=e25] [cursor=pointer]
+      - generic [ref=e26]:
+        - button "Open the featured palette" [ref=e27] [cursor=pointer]:
+          - generic [ref=e28]: "#E9D8A6"
+          - generic [ref=e29]: "#D4A373"
+          - generic [ref=e30]: "#A98467"
+          - generic [ref=e31]: "#6C584C"
+        - paragraph [ref=e33]: Dune · Playfair Display + Nunito
+    - generic [ref=e35]:
+      - button "Curated" [pressed] [ref=e36] [cursor=pointer]
+      - button "Generated" [ref=e37] [cursor=pointer]
+      - combobox "Category" [ref=e39] [cursor=pointer]:
+        - option "All categories" [selected]
+        - option "Pastel"
+        - option "Minimalist"
+        - option "Earthy"
+        - option "Vintage"
+        - option "Romantic"
+        - option "Modern"
+        - option "Retro"
+        - option "Luxury"
+        - option "Coastal"
+        - option "Neutral"
+        - option "Dark"
+        - option "Bright"
+        - option "Monochrome"
+        - option "Tropical"
+        - option "Autumn"
+        - option "Spring"
+        - option "Winter"
+        - option "Sunset"
+        - option "Nature"
+        - option "Candy"
+      - combobox "Mood" [ref=e40] [cursor=pointer]:
+        - option "Any mood" [selected]
+        - option "Calm"
+        - option "Cozy"
+        - option "Energetic"
+        - option "Dreamy"
+        - option "Playful"
+        - option "Elegant"
+        - option "Fresh"
+        - option "Bold"
+        - option "Moody"
+        - option "Warm"
+        - option "Cool"
+      - combobox "Sort" [ref=e41] [cursor=pointer]:
+        - option "Newest" [selected]
+        - option "A-Z"
+      - button "Shuffle" [ref=e42] [cursor=pointer]
+    - region "Palettes" [ref=e43]:
+      - button "Open palette Cotton Cloud" [ref=e44] [cursor=pointer]:
+        - generic [ref=e45]:
+          - generic [ref=e46]: "#FFCFD2"
+          - generic [ref=e48]: "#F1C0E8"
+          - generic [ref=e50]: "#CFBAF0"
+          - generic [ref=e52]: "#A3C4F3"
+          - generic [ref=e54]: "#90DBF4"
+          - button "Save Cotton Cloud" [ref=e56]: Save
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - generic [ref=e59]: Cotton Cloud
+            - generic [ref=e60]: Candy
+          - generic [ref=e61]: Raleway + Nunito
+      - button "Open palette Sugar Rush" [ref=e62] [cursor=pointer]:
+        - generic [ref=e63]:
+          - generic [ref=e64]: "#FFADAD"
+          - generic [ref=e66]: "#FFD6A5"
+          - generic [ref=e68]: "#FDFFB6"
+          - generic [ref=e70]: "#CAFFBF"
+          - generic [ref=e72]: "#9BF6FF"
+          - button "Save Sugar Rush" [ref=e74]: Save
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - generic [ref=e77]: Sugar Rush
+            - generic [ref=e78]: Candy
+          - generic [ref=e79]: DM Serif Display + Inter
+      - button "Open palette Bubblegum" [ref=e80] [cursor=pointer]:
+        - generic [ref=e81]:
+          - generic [ref=e82]: "#FF99C8"
+          - generic [ref=e84]: "#FCF6BD"
+          - generic [ref=e86]: "#D0F4DE"
+          - generic [ref=e88]: "#A9DEF9"
+          - generic [ref=e90]: "#E4C1F9"
+          - button "Save Bubblegum" [ref=e92]: Save
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - generic [ref=e95]: Bubblegum
+            - generic [ref=e96]: Candy
+          - generic [ref=e97]: Poppins + Nunito
+      - button "Open palette Moss and Bark" [ref=e98] [cursor=pointer]:
+        - generic [ref=e99]:
+          - generic [ref=e100]: "#4F772D"
+          - generic [ref=e102]: "#90A955"
+          - generic [ref=e104]: "#ECF39E"
+          - generic [ref=e106]: "#31572C"
+          - button "Save Moss and Bark" [ref=e108]: Save
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - generic [ref=e111]: Moss and Bark
+            - generic [ref=e112]: Nature
+          - generic [ref=e113]: Cormorant Garamond + Poppins
+      - button "Open palette Meadow" [ref=e114] [cursor=pointer]:
+        - generic [ref=e115]:
+          - generic [ref=e116]: "#CCD5AE"
+          - generic [ref=e118]: "#E9EDC9"
+          - generic [ref=e120]: "#FEFAE0"
+          - generic [ref=e122]: "#FAEDCD"
+          - generic [ref=e124]: "#D4A373"
+          - button "Save Meadow" [ref=e126]: Save
+        - generic [ref=e127]:
+          - generic [ref=e128]:
+            - generic [ref=e129]: Meadow
+            - generic [ref=e130]: Nature
+          - generic [ref=e131]: Fraunces + Nunito
+      - button "Open palette River Stone" [ref=e132] [cursor=pointer]:
+        - generic [ref=e133]:
+          - generic [ref=e134]: "#DAD7CD"
+          - generic [ref=e136]: "#A3B18A"
+          - generic [ref=e138]: "#588157"
+          - generic [ref=e140]: "#3A5A40"
+          - generic [ref=e142]: "#344E41"
+          - button "Save River Stone" [ref=e144]: Save
+        - generic [ref=e145]:
+          - generic [ref=e146]:
+            - generic [ref=e147]: River Stone
+            - generic [ref=e148]: Nature
+          - generic [ref=e149]: Lora + Work Sans
+      - button "Open palette Pink Horizon" [ref=e150] [cursor=pointer]:
+        - generic [ref=e151]:
+          - generic [ref=e152]: "#FFD6A5"
+          - generic [ref=e154]: "#FFADAD"
+          - generic [ref=e156]: "#CDB4DB"
+          - generic [ref=e158]: "#A2D2FF"
+          - button "Save Pink Horizon" [ref=e160]: Save
+        - generic [ref=e161]:
+          - generic [ref=e162]:
+            - generic [ref=e163]: Pink Horizon
+            - generic [ref=e164]: Sunset
+          - generic [ref=e165]: Raleway + DM Sans
+      - button "Open palette Dusk Glow" [ref=e166] [cursor=pointer]:
+        - generic [ref=e167]:
+          - generic [ref=e168]: "#FFBA08"
+          - generic [ref=e170]: "#F48C06"
+          - generic [ref=e172]: "#DC2F02"
+          - generic [ref=e174]: "#9D0208"
+          - generic [ref=e176]: "#370617"
+          - button "Save Dusk Glow" [ref=e178]: Save
+        - generic [ref=e179]:
+          - generic [ref=e180]:
+            - generic [ref=e181]: Dusk Glow
+            - generic [ref=e182]: Sunset
+          - generic [ref=e183]: Montserrat + Nunito
+      - button "Open palette Golden Hour" [ref=e184] [cursor=pointer]:
+        - generic [ref=e185]:
+          - generic [ref=e186]: "#FFCDB2"
+          - generic [ref=e188]: "#FFB4A2"
+          - generic [ref=e190]: "#E5989B"
+          - generic [ref=e192]: "#B5838D"
+          - generic [ref=e194]: "#6D6875"
+          - button "Save Golden Hour" [ref=e196]: Save
+        - generic [ref=e197]:
+          - generic [ref=e198]:
+            - generic [ref=e199]: Golden Hour
+            - generic [ref=e200]: Sunset
+          - generic [ref=e201]: Playfair Display + Inter
+      - button "Open palette Pine and Berry" [ref=e202] [cursor=pointer]:
+        - generic [ref=e203]:
+          - generic [ref=e204]: "#1B4332"
+          - generic [ref=e206]: "#2D6A4F"
+          - generic [ref=e208]: "#FFFFFF"
+          - generic [ref=e210]: "#C1121F"
+          - button "Save Pine and Berry" [ref=e212]: Save
+        - generic [ref=e213]:
+          - generic [ref=e214]:
+            - generic [ref=e215]: Pine and Berry
+            - generic [ref=e216]: Winter
+          - generic [ref=e217]: Fraunces + Poppins
+      - button "Open palette Snowfall" [ref=e218] [cursor=pointer]:
+        - generic [ref=e219]:
+          - generic [ref=e220]: "#FFFFFF"
+          - generic [ref=e222]: "#E9ECEF"
+          - generic [ref=e224]: "#CED4DA"
+          - generic [ref=e226]: "#ADB5BD"
+          - button "Save Snowfall" [ref=e228]: Save
+        - generic [ref=e229]:
+          - generic [ref=e230]:
+            - generic [ref=e231]: Snowfall
+            - generic [ref=e232]: Winter
+          - generic [ref=e233]: Space Grotesk + DM Sans
+      - button "Open palette Frost" [ref=e234] [cursor=pointer]:
+        - generic [ref=e235]:
+          - generic [ref=e236]: "#EAF4F4"
+          - generic [ref=e238]: "#CCE3DE"
+          - generic [ref=e240]: "#A4C3B2"
+          - generic [ref=e242]: "#6B9080"
+          - button "Save Frost" [ref=e244]: Save
+        - generic [ref=e245]:
+          - generic [ref=e246]:
+            - generic [ref=e247]: Frost
+            - generic [ref=e248]: Winter
+          - generic [ref=e249]: Montserrat + Lora
+      - button "Open palette Morning Dew" [ref=e250] [cursor=pointer]:
+        - generic [ref=e251]:
+          - generic [ref=e252]: "#F1FAEE"
+          - generic [ref=e254]: "#CAF0F8"
+          - generic [ref=e256]: "#D8F3DC"
+          - generic [ref=e258]: "#FEFAE0"
+          - button "Save Morning Dew" [ref=e260]: Save
+        - generic [ref=e261]:
+          - generic [ref=e262]:
+            - generic [ref=e263]: Morning Dew
+            - generic [ref=e264]: Spring
+          - generic [ref=e265]: Lora + Work Sans
+      - button "Open palette Tulip Field" [ref=e266] [cursor=pointer]:
+        - generic [ref=e267]:
+          - generic [ref=e268]: "#FFE5EC"
+          - generic [ref=e270]: "#FFB3C6"
+          - generic [ref=e272]: "#B7E4C7"
+          - generic [ref=e274]: "#FDFFB6"
+          - button "Save Tulip Field" [ref=e276]: Save
+        - generic [ref=e277]:
+          - generic [ref=e278]:
+            - generic [ref=e279]: Tulip Field
+            - generic [ref=e280]: Spring
+          - generic [ref=e281]: DM Serif Display + Raleway
+      - button "Open palette Cherry Blossom" [ref=e282] [cursor=pointer]:
+        - generic [ref=e283]:
+          - generic [ref=e284]: "#FFF0F5"
+          - generic [ref=e286]: "#FFD6E8"
+          - generic [ref=e288]: "#FFB3D1"
+          - generic [ref=e290]: "#B5E48C"
+          - button "Save Cherry Blossom" [ref=e292]: Save
+        - generic [ref=e293]:
+          - generic [ref=e294]:
+            - generic [ref=e295]: Cherry Blossom
+            - generic [ref=e296]: Spring
+          - generic [ref=e297]: Cormorant Garamond + Nunito
+      - button "Open palette Pumpkin Spice" [ref=e298] [cursor=pointer]:
+        - generic [ref=e299]:
+          - generic [ref=e300]: "#FFE8D6"
+          - generic [ref=e302]: "#FFB703"
+          - generic [ref=e304]: "#E85D04"
+          - generic [ref=e306]: "#9D0208"
+          - button "Save Pumpkin Spice" [ref=e308]: Save
+        - generic [ref=e309]:
+          - generic [ref=e310]:
+            - generic [ref=e311]: Pumpkin Spice
+            - generic [ref=e312]: Autumn
+          - generic [ref=e313]: Fraunces + Inter
+      - button "Open palette Harvest Moon" [ref=e314] [cursor=pointer]:
+        - generic [ref=e315]:
+          - generic [ref=e316]: "#F4A259"
+          - generic [ref=e318]: "#BC4B51"
+          - generic [ref=e320]: "#8CB369"
+          - generic [ref=e322]: "#5B8E7D"
+          - generic [ref=e324]: "#F4E285"
+          - button "Save Harvest Moon" [ref=e326]: Save
+        - generic [ref=e327]:
+          - generic [ref=e328]:
+            - generic [ref=e329]: Harvest Moon
+            - generic [ref=e330]: Autumn
+          - generic [ref=e331]: DM Serif Display + DM Sans
+      - button "Open palette Maple Leaf" [ref=e332] [cursor=pointer]:
+        - generic [ref=e333]:
+          - generic [ref=e334]: "#6F1D1B"
+          - generic [ref=e336]: "#BB9457"
+          - generic [ref=e338]: "#432818"
+          - generic [ref=e340]: "#99582A"
+          - generic [ref=e342]: "#FFE6A7"
+          - button "Save Maple Leaf" [ref=e344]: Save
+        - generic [ref=e345]:
+          - generic [ref=e346]:
+            - generic [ref=e347]: Maple Leaf
+            - generic [ref=e348]: Autumn
+          - generic [ref=e349]: Playfair Display + Lora
+      - button "Open palette Hibiscus" [ref=e350] [cursor=pointer]:
+        - generic [ref=e351]:
+          - generic [ref=e352]: "#FF6F91"
+          - generic [ref=e354]: "#FF9671"
+          - generic [ref=e356]: "#FFC75F"
+          - generic [ref=e358]: "#008F7A"
+          - button "Save Hibiscus" [ref=e360]: Save
+        - generic [ref=e361]:
+          - generic [ref=e362]:
+            - generic [ref=e363]: Hibiscus
+            - generic [ref=e364]: Tropical
+          - generic [ref=e365]: Raleway + Lora
+      - button "Open palette Mango Lagoon" [ref=e366] [cursor=pointer]:
+        - generic [ref=e367]:
+          - generic [ref=e368]: "#FFB703"
+          - generic [ref=e370]: "#FB8500"
+          - generic [ref=e372]: "#219EBC"
+          - generic [ref=e374]: "#023047"
+          - button "Save Mango Lagoon" [ref=e376]: Save
+        - generic [ref=e377]:
+          - generic [ref=e378]:
+            - generic [ref=e379]: Mango Lagoon
+            - generic [ref=e380]: Tropical
+          - generic [ref=e381]: Fraunces + Work Sans
+      - button "Open palette Palm Breeze" [ref=e382] [cursor=pointer]:
+        - generic [ref=e383]:
+          - generic [ref=e384]: "#06D6A0"
+          - generic [ref=e386]: "#FFD166"
+          - generic [ref=e388]: "#EF476F"
+          - generic [ref=e390]: "#118AB2"
+          - button "Save Palm Breeze" [ref=e392]: Save
+        - generic [ref=e393]:
+          - generic [ref=e394]:
+            - generic [ref=e395]: Palm Breeze
+            - generic [ref=e396]: Tropical
+          - generic [ref=e397]: Poppins + Nunito
+      - button "Open palette Green Mono" [ref=e398] [cursor=pointer]:
+        - generic [ref=e399]:
+          - generic [ref=e400]: "#EDF7EE"
+          - generic [ref=e402]: "#C3E6CB"
+          - generic [ref=e404]: "#8FCB9B"
+          - generic [ref=e406]: "#3E8E55"
+          - button "Save Green Mono" [ref=e408]: Save
+        - generic [ref=e409]:
+          - generic [ref=e410]:
+            - generic [ref=e411]: Green Mono
+            - generic [ref=e412]: Monochrome
+          - generic [ref=e413]: Lora + Nunito
+      - button "Open palette Rose Mono" [ref=e414] [cursor=pointer]:
+        - generic [ref=e415]:
+          - generic [ref=e416]: "#FFF0F3"
+          - generic [ref=e418]: "#FFCCD5"
+          - generic [ref=e420]: "#FF8FA3"
+          - generic [ref=e422]: "#C9184A"
+          - button "Save Rose Mono" [ref=e424]: Save
+        - generic [ref=e425]:
+          - generic [ref=e426]:
+            - generic [ref=e427]: Rose Mono
+            - generic [ref=e428]: Monochrome
+          - generic [ref=e429]: Playfair Display + DM Sans
+      - button "Open palette Blue Mist" [ref=e430] [cursor=pointer]:
+        - generic [ref=e431]:
+          - generic [ref=e432]: "#EAF2FB"
+          - generic [ref=e434]: "#CADFF5"
+          - generic [ref=e436]: "#9DC3EA"
+          - generic [ref=e438]: "#5B93D1"
+          - button "Save Blue Mist" [ref=e440]: Save
+        - generic [ref=e441]:
+          - generic [ref=e442]:
+            - generic [ref=e443]: Blue Mist
+            - generic [ref=e444]: Monochrome
+          - generic [ref=e445]: Space Grotesk + Inter
+      - button "Open palette Fresh Berry" [ref=e446] [cursor=pointer]:
+        - generic [ref=e447]:
+          - generic [ref=e448]: "#E63946"
+          - generic [ref=e450]: "#F1FAEE"
+          - generic [ref=e452]: "#A8DADC"
+          - generic [ref=e454]: "#457B9D"
+          - button "Save Fresh Berry" [ref=e456]: Save
+        - generic [ref=e457]:
+          - generic [ref=e458]:
+            - generic [ref=e459]: Fresh Berry
+            - generic [ref=e460]: Bright
+          - generic [ref=e461]: Raleway + Work Sans
+      - button "Open palette Electric Lagoon" [ref=e462] [cursor=pointer]:
+        - generic [ref=e463]:
+          - generic [ref=e464]: "#00B4D8"
+          - generic [ref=e466]: "#0077B6"
+          - generic [ref=e468]: "#FFEE32"
+          - generic [ref=e470]: "#FF5D8F"
+          - button "Save Electric Lagoon" [ref=e472]: Save
+        - generic [ref=e473]:
+          - generic [ref=e474]:
+            - generic [ref=e475]: Electric Lagoon
+            - generic [ref=e476]: Bright
+          - generic [ref=e477]: Montserrat + Inter
+      - button "Open palette Citrus Pop" [ref=e478] [cursor=pointer]:
+        - generic [ref=e479]:
+          - generic [ref=e480]: "#FFD60A"
+          - generic [ref=e482]: "#FF9F1C"
+          - generic [ref=e484]: "#2EC4B6"
+          - generic [ref=e486]: "#FDFFFC"
+          - button "Save Citrus Pop" [ref=e488]: Save
+        - generic [ref=e489]:
+          - generic [ref=e490]:
+            - generic [ref=e491]: Citrus Pop
+            - generic [ref=e492]: Bright
+          - generic [ref=e493]: Poppins + Nunito
+      - button "Open palette Deep Forest Night" [ref=e494] [cursor=pointer]:
+        - generic [ref=e495]:
+          - generic [ref=e496]: "#0B1D16"
+          - generic [ref=e498]: "#15332B"
+          - generic [ref=e500]: "#2D6A4F"
+          - generic [ref=e502]: "#95D5B2"
+          - button "Save Deep Forest Night" [ref=e504]: Save
+        - generic [ref=e505]:
+          - generic [ref=e506]:
+            - generic [ref=e507]: Deep Forest Night
+            - generic [ref=e508]: Dark
+          - generic [ref=e509]: Fraunces + DM Sans
+      - button "Open palette Charcoal Ember" [ref=e510] [cursor=pointer]:
+        - generic [ref=e511]:
+          - generic [ref=e512]: "#121212"
+          - generic [ref=e514]: "#2B2B2B"
+          - generic [ref=e516]: "#E4572E"
+          - generic [ref=e518]: "#F3A712"
+          - button "Save Charcoal Ember" [ref=e520]: Save
+        - generic [ref=e521]:
+          - generic [ref=e522]:
+            - generic [ref=e523]: Charcoal Ember
+            - generic [ref=e524]: Dark
+          - generic [ref=e525]: Montserrat + Work Sans
+      - button "Open palette Midnight Ink" [ref=e526] [cursor=pointer]:
+        - generic [ref=e527]:
+          - generic [ref=e528]: "#0D1B2A"
+          - generic [ref=e530]: "#1B263B"
+          - generic [ref=e532]: "#415A77"
+          - generic [ref=e534]: "#778DA9"
+          - button "Save Midnight Ink" [ref=e536]: Save
+        - generic [ref=e537]:
+          - generic [ref=e538]:
+            - generic [ref=e539]: Midnight Ink
+            - generic [ref=e540]: Dark
+          - generic [ref=e541]: Space Grotesk + Inter
+      - button "Open palette Cloud Grey" [ref=e542] [cursor=pointer]:
+        - generic [ref=e543]:
+          - generic [ref=e544]: "#F4F4F2"
+          - generic [ref=e546]: "#D9D9D4"
+          - generic [ref=e548]: "#A6A59F"
+          - generic [ref=e550]: "#6B6A66"
+          - button "Save Cloud Grey" [ref=e552]: Save
+        - generic [ref=e553]:
+          - generic [ref=e554]:
+            - generic [ref=e555]: Cloud Grey
+            - generic [ref=e556]: Neutral
+          - generic [ref=e557]: Work Sans + Poppins
+      - button "Open palette Warm Stone" [ref=e558] [cursor=pointer]:
+        - generic [ref=e559]:
+          - generic [ref=e560]: "#EAE0D5"
+          - generic [ref=e562]: "#C6AC8F"
+          - generic [ref=e564]: "#5E503F"
+          - button "Save Warm Stone" [ref=e566]: Save
+        - generic [ref=e567]:
+          - generic [ref=e568]:
+            - generic [ref=e569]: Warm Stone
+            - generic [ref=e570]: Neutral
+          - generic [ref=e571]: Lora + DM Sans
+      - button "Open palette Oat Milk" [ref=e572] [cursor=pointer]:
+        - generic [ref=e573]:
+          - generic [ref=e574]: "#F5EFE6"
+          - generic [ref=e576]: "#E5D9C6"
+          - generic [ref=e578]: "#CBB89D"
+          - button "Save Oat Milk" [ref=e580]: Save
+        - generic [ref=e581]:
+          - generic [ref=e582]:
+            - generic [ref=e583]: Oat Milk
+            - generic [ref=e584]: Neutral
+          - generic [ref=e585]: Fraunces + Inter
+      - button "Open palette Harbor Mist" [ref=e586] [cursor=pointer]:
+        - generic [ref=e587]:
+          - generic [ref=e588]: "#E0FBFC"
+          - generic [ref=e590]: "#C2DFE3"
+          - generic [ref=e592]: "#9DB4C0"
+          - generic [ref=e594]: "#5C6B73"
+          - button "Save Harbor Mist" [ref=e596]: Save
+        - generic [ref=e597]:
+          - generic [ref=e598]:
+            - generic [ref=e599]: Harbor Mist
+            - generic [ref=e600]: Coastal
+          - generic [ref=e601]: Montserrat + Nunito
+      - button "Open palette Sandy Shore" [ref=e602] [cursor=pointer]:
+        - generic [ref=e603]:
+          - generic [ref=e604]: "#FDF6EC"
+          - generic [ref=e606]: "#F4E3CF"
+          - generic [ref=e608]: "#89C2D9"
+          - generic [ref=e610]: "#2A6F97"
+          - button "Save Sandy Shore" [ref=e612]: Save
+        - generic [ref=e613]:
+          - generic [ref=e614]:
+            - generic [ref=e615]: Sandy Shore
+            - generic [ref=e616]: Coastal
+          - generic [ref=e617]: Lora + Work Sans
+      - button "Open palette Sea Glass" [ref=e618] [cursor=pointer]:
+        - generic [ref=e619]:
+          - generic [ref=e620]: "#CAF0F8"
+          - generic [ref=e622]: "#ADE8F4"
+          - generic [ref=e624]: "#90E0EF"
+          - generic [ref=e626]: "#48CAE4"
+          - button "Save Sea Glass" [ref=e628]: Save
+        - generic [ref=e629]:
+          - generic [ref=e630]:
+            - generic [ref=e631]: Sea Glass
+            - generic [ref=e632]: Coastal
+          - generic [ref=e633]: Raleway + Lora
+      - button "Open palette Royal Plum" [ref=e634] [cursor=pointer]:
+        - generic [ref=e635]:
+          - generic [ref=e636]: "#2D1E2F"
+          - generic [ref=e638]: "#5B3A63"
+          - generic [ref=e640]: "#C9A227"
+          - generic [ref=e642]: "#F3E9DC"
+          - button "Save Royal Plum" [ref=e644]: Save
+        - generic [ref=e645]:
+          - generic [ref=e646]:
+            - generic [ref=e647]: Royal Plum
+            - generic [ref=e648]: Luxury
+          - generic [ref=e649]: DM Serif Display + Lora
+      - button "Open palette Emerald Velvet" [ref=e650] [cursor=pointer]:
+        - generic [ref=e651]:
+          - generic [ref=e652]: "#0B3D2E"
+          - generic [ref=e654]: "#14532D"
+          - generic [ref=e656]: "#B8A15A"
+          - generic [ref=e658]: "#F5F1E3"
+          - button "Save Emerald Velvet" [ref=e660]: Save
+        - generic [ref=e661]:
+          - generic [ref=e662]:
+            - generic [ref=e663]: Emerald Velvet
+            - generic [ref=e664]: Luxury
+          - generic [ref=e665]: Cormorant Garamond + Raleway
+      - button "Open palette Midnight Gold" [ref=e666] [cursor=pointer]:
+        - generic [ref=e667]:
+          - generic [ref=e668]: "#0B0B0F"
+          - generic [ref=e670]: "#1F1F2E"
+          - generic [ref=e672]: "#C9A227"
+          - generic [ref=e674]: "#F5E6B3"
+          - button "Save Midnight Gold" [ref=e676]: Save
+        - generic [ref=e677]:
+          - generic [ref=e678]:
+            - generic [ref=e679]: Midnight Gold
+            - generic [ref=e680]: Luxury
+          - generic [ref=e681]: Playfair Display + Montserrat
+      - button "Open palette Arcade Pop" [ref=e682] [cursor=pointer]:
+        - generic [ref=e683]:
+          - generic [ref=e684]: "#F72585"
+          - generic [ref=e686]: "#7209B7"
+          - generic [ref=e688]: "#3A0CA3"
+          - generic [ref=e690]: "#4CC9F0"
+          - button "Save Arcade Pop" [ref=e692]: Save
+        - generic [ref=e693]:
+          - generic [ref=e694]:
+            - generic [ref=e695]: Arcade Pop
+            - generic [ref=e696]: Retro
+          - generic [ref=e697]: Space Grotesk + Raleway
+      - button "Open palette Seventies Warm" [ref=e698] [cursor=pointer]:
+        - generic [ref=e699]:
+          - generic [ref=e700]: "#264653"
+          - generic [ref=e702]: "#2A9D8F"
+          - generic [ref=e704]: "#E9C46A"
+          - generic [ref=e706]: "#F4A261"
+          - generic [ref=e708]: "#E76F51"
+          - button "Save Seventies Warm" [ref=e710]: Save
+        - generic [ref=e711]:
+          - generic [ref=e712]:
+            - generic [ref=e713]: Seventies Warm
+            - generic [ref=e714]: Retro
+          - generic [ref=e715]: DM Serif Display + Nunito
+      - button "Open palette Sunset Diner" [ref=e716] [cursor=pointer]:
+        - generic [ref=e717]:
+          - generic [ref=e718]: "#FFBE0B"
+          - generic [ref=e720]: "#FB5607"
+          - generic [ref=e722]: "#FF006E"
+          - generic [ref=e724]: "#8338EC"
+          - generic [ref=e726]: "#3A86FF"
+          - button "Save Sunset Diner" [ref=e728]: Save
+        - generic [ref=e729]:
+          - generic [ref=e730]:
+            - generic [ref=e731]: Sunset Diner
+            - generic [ref=e732]: Retro
+          - generic [ref=e733]: Fraunces + Poppins
+      - button "Open palette Graphite" [ref=e734] [cursor=pointer]:
+        - generic [ref=e735]:
+          - generic [ref=e736]: "#F1F3F5"
+          - generic [ref=e738]: "#ADB5BD"
+          - generic [ref=e740]: "#495057"
+          - button "Save Graphite" [ref=e742]: Save
+        - generic [ref=e743]:
+          - generic [ref=e744]:
+            - generic [ref=e745]: Graphite
+            - generic [ref=e746]: Modern
+          - generic [ref=e747]: Poppins + DM Sans
+      - button "Open palette Mono Teal" [ref=e748] [cursor=pointer]:
+        - generic [ref=e749]:
+          - generic [ref=e750]: "#F0F7F7"
+          - generic [ref=e752]: "#A8DADC"
+          - generic [ref=e754]: "#457B9D"
+          - generic [ref=e756]: "#1D3557"
+          - button "Save Mono Teal" [ref=e758]: Save
+        - generic [ref=e759]:
+          - generic [ref=e760]:
+            - generic [ref=e761]: Mono Teal
+            - generic [ref=e762]: Modern
+          - generic [ref=e763]: Montserrat + Work Sans
+      - button "Open palette Studio Blue" [ref=e764] [cursor=pointer]:
+        - generic [ref=e765]:
+          - generic [ref=e766]: "#EDF2FB"
+          - generic [ref=e768]: "#B6CCFE"
+          - generic [ref=e770]: "#4361EE"
+          - generic [ref=e772]: "#1B1F3B"
+          - button "Save Studio Blue" [ref=e774]: Save
+        - generic [ref=e775]:
+          - generic [ref=e776]:
+            - generic [ref=e777]: Studio Blue
+            - generic [ref=e778]: Modern
+          - generic [ref=e779]: Space Grotesk + Inter
+      - button "Open palette Love Letter" [ref=e780] [cursor=pointer]:
+        - generic [ref=e781]:
+          - generic [ref=e782]: "#FFF0F3"
+          - generic [ref=e784]: "#FFB3C6"
+          - generic [ref=e786]: "#FF758F"
+          - generic [ref=e788]: "#A4133C"
+          - button "Save Love Letter" [ref=e790]: Save
+        - generic [ref=e791]:
+          - generic [ref=e792]:
+            - generic [ref=e793]: Love Letter
+            - generic [ref=e794]: Romantic
+          - generic [ref=e795]: DM Serif Display + Inter
+      - button "Open palette Blush Evening" [ref=e796] [cursor=pointer]:
+        - generic [ref=e797]:
+          - generic [ref=e798]: "#FADADD"
+          - generic [ref=e800]: "#F4B6C2"
+          - generic [ref=e802]: "#C08497"
+          - button "Save Blush Evening" [ref=e804]: Save
+        - generic [ref=e805]:
+          - generic [ref=e806]:
+            - generic [ref=e807]: Blush Evening
+            - generic [ref=e808]: Romantic
+          - generic [ref=e809]: Cormorant Garamond + Poppins
+      - button "Open palette Rose Petal" [ref=e810] [cursor=pointer]:
+        - generic [ref=e811]:
+          - generic [ref=e812]: "#FFE5EC"
+          - generic [ref=e814]: "#FFC2D1"
+          - generic [ref=e816]: "#FF8FAB"
+          - generic [ref=e818]: "#FB6F92"
+          - button "Save Rose Petal" [ref=e820]: Save
+        - generic [ref=e821]:
+          - generic [ref=e822]:
+            - generic [ref=e823]: Rose Petal
+            - generic [ref=e824]: Romantic
+          - generic [ref=e825]: Playfair Display + Raleway
+      - button "Open palette Sepia Letters" [ref=e826] [cursor=pointer]:
+        - generic [ref=e827]:
+          - generic [ref=e828]: "#EDE0D4"
+          - generic [ref=e830]: "#E6CCB2"
+          - generic [ref=e832]: "#B08968"
+          - generic [ref=e834]: "#7F5539"
+          - button "Save Sepia Letters" [ref=e836]: Save
+        - generic [ref=e837]:
+          - generic [ref=e838]:
+            - generic [ref=e839]: Sepia Letters
+            - generic [ref=e840]: Vintage
+          - generic [ref=e841]: Playfair Display + Lora
+      - button "Open palette Old Postcard" [ref=e842] [cursor=pointer]:
+        - generic [ref=e843]:
+          - generic [ref=e844]: "#F4E9CD"
+          - generic [ref=e846]: "#D9B382"
+          - generic [ref=e848]: "#A44A3F"
+          - generic [ref=e850]: "#4A5759"
+          - button "Save Old Postcard" [ref=e852]: Save
+        - generic [ref=e853]:
+          - generic [ref=e854]:
+            - generic [ref=e855]: Old Postcard
+            - generic [ref=e856]: Vintage
+          - generic [ref=e857]: DM Serif Display + Work Sans
+      - button "Open palette Antique Rose" [ref=e858] [cursor=pointer]:
+        - generic [ref=e859]:
+          - generic [ref=e860]: "#D4A5A5"
+          - generic [ref=e862]: "#B5838D"
+          - generic [ref=e864]: "#6D597A"
+          - button "Save Antique Rose" [ref=e866]: Save
+        - generic [ref=e867]:
+          - generic [ref=e868]:
+            - generic [ref=e869]: Antique Rose
+            - generic [ref=e870]: Vintage
+          - generic [ref=e871]: Cormorant Garamond + Lora
+      - button "Open palette Dune" [ref=e872] [cursor=pointer]:
+        - generic [ref=e873]:
+          - generic [ref=e874]: "#E9D8A6"
+          - generic [ref=e876]: "#D4A373"
+          - generic [ref=e878]: "#A98467"
+          - generic [ref=e880]: "#6C584C"
+          - button "Save Dune" [ref=e882]: Save
+        - generic [ref=e883]:
+          - generic [ref=e884]:
+            - generic [ref=e885]: Dune
+            - generic [ref=e886]: Earthy
+          - generic [ref=e887]: Playfair Display + Nunito
+      - button "Open palette Forest Floor" [ref=e888] [cursor=pointer]:
+        - generic [ref=e889]:
+          - generic [ref=e890]: "#606C38"
+          - generic [ref=e892]: "#283618"
+          - generic [ref=e894]: "#FEFAE0"
+          - generic [ref=e896]: "#DDA15E"
+          - generic [ref=e898]: "#BC6C25"
+          - button "Save Forest Floor" [ref=e900]: Save
+        - generic [ref=e901]:
+          - generic [ref=e902]:
+            - generic [ref=e903]: Forest Floor
+            - generic [ref=e904]: Earthy
+          - generic [ref=e905]: Lora + Poppins
+      - button "Open palette Terracotta Clay" [ref=e906] [cursor=pointer]:
+        - generic [ref=e907]:
+          - generic [ref=e908]: "#CB997E"
+          - generic [ref=e910]: "#DDBEA9"
+          - generic [ref=e912]: "#FFE8D6"
+          - generic [ref=e914]: "#B7B7A4"
+          - generic [ref=e916]: "#A5A58D"
+          - button "Save Terracotta Clay" [ref=e918]: Save
+        - generic [ref=e919]:
+          - generic [ref=e920]:
+            - generic [ref=e921]: Terracotta Clay
+            - generic [ref=e922]: Earthy
+          - generic [ref=e923]: Fraunces + DM Sans
+      - button "Open palette Soft Linen" [ref=e924] [cursor=pointer]:
+        - generic [ref=e925]:
+          - generic [ref=e926]: "#F7F3EE"
+          - generic [ref=e928]: "#E3DCD2"
+          - generic [ref=e930]: "#3A3A3A"
+          - button "Save Soft Linen" [ref=e932]: Save
+        - generic [ref=e933]:
+          - generic [ref=e934]:
+            - generic [ref=e935]: Soft Linen
+            - generic [ref=e936]: Minimalist
+          - generic [ref=e937]: Cormorant Garamond + Nunito
+      - button "Open palette Quiet Grey" [ref=e938] [cursor=pointer]:
+        - generic [ref=e939]:
+          - generic [ref=e940]: "#F2F2F2"
+          - generic [ref=e942]: "#CFCFCF"
+          - generic [ref=e944]: "#8A8A8A"
+          - generic [ref=e946]: "#1F1F1F"
+          - button "Save Quiet Grey" [ref=e948]: Save
+        - generic [ref=e949]:
+          - generic [ref=e950]:
+            - generic [ref=e951]: Quiet Grey
+            - generic [ref=e952]: Minimalist
+          - generic [ref=e953]: Montserrat + Lora
+      - button "Open palette Paper White" [ref=e954] [cursor=pointer]:
+        - generic [ref=e955]:
+          - generic [ref=e956]: "#FAFAFA"
+          - generic [ref=e958]: "#E8E8E8"
+          - generic [ref=e960]: "#2B2B2B"
+          - button "Save Paper White" [ref=e962]: Save
+        - generic [ref=e963]:
+          - generic [ref=e964]:
+            - generic [ref=e965]: Paper White
+            - generic [ref=e966]: Minimalist
+          - generic [ref=e967]: Space Grotesk + Inter
+      - button "Open palette Lilac Haze" [ref=e968] [cursor=pointer]:
+        - generic [ref=e969]:
+          - generic [ref=e970]: "#E4D4F4"
+          - generic [ref=e972]: "#CDB4DB"
+          - generic [ref=e974]: "#FFC8DD"
+          - button "Save Lilac Haze" [ref=e976]: Save
+        - generic [ref=e977]:
+          - generic [ref=e978]:
+            - generic [ref=e979]: Lilac Haze
+            - generic [ref=e980]: Pastel
+          - generic [ref=e981]: Fraunces + Work Sans
+      - button "Open palette Mint Cream" [ref=e982] [cursor=pointer]:
+        - generic [ref=e983]:
+          - generic [ref=e984]: "#D8F3DC"
+          - generic [ref=e986]: "#B7E4C7"
+          - generic [ref=e988]: "#FFF1E6"
+          - button "Save Mint Cream" [ref=e990]: Save
+        - generic [ref=e991]:
+          - generic [ref=e992]:
+            - generic [ref=e993]: Mint Cream
+            - generic [ref=e994]: Pastel
+          - generic [ref=e995]: DM Serif Display + DM Sans
+      - button "Open palette Cotton Candy" [ref=e996] [cursor=pointer]:
+        - generic [ref=e997]:
+          - generic [ref=e998]: "#FFC8DD"
+          - generic [ref=e1000]: "#FFAFCC"
+          - generic [ref=e1002]: "#BDE0FE"
+          - generic [ref=e1004]: "#A2D2FF"
+          - button "Save Cotton Candy" [ref=e1006]: Save
+        - generic [ref=e1007]:
+          - generic [ref=e1008]:
+            - generic [ref=e1009]: Cotton Candy
+            - generic [ref=e1010]: Pastel
+          - generic [ref=e1011]: Playfair Display + Inter
+  - status
+```
